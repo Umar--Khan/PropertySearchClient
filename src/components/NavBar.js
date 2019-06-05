@@ -48,7 +48,7 @@ class NavBar extends Component {
                 </li>
                 <li className="nav-item">
                   <a className="nav-link" href="property-grid.html">
-                    Property
+                    PlacerHolder
                   </a>
                 </li>
                 <li className="nav-item">

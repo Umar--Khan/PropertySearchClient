@@ -2,8 +2,11 @@ import React, { Component } from "react";
 
 import NavBar from "./components/NavBar";
 import Home from "./components/Home";
+import Search from "./components/Search";
 import LatestProperties from "./components/LatestProperties";
+import Footer from "./components/Footer";
 
+// Google Font App.css
 import "./App.css";
 
 // Bootstrap CSS File
@@ -23,8 +26,10 @@ class App extends Component {
     return (
       <>
         <NavBar />
+        <Search />
         <Home />
         <LatestProperties />
+        <Footer />
       </>
     );
   }
