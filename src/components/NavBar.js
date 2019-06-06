@@ -1,75 +1,32 @@
 import React, { Component } from "react";
+import M from "materialize-css";
 
 class NavBar extends Component {
+  componentDidMount() {
+    var elems = document.querySelectorAll(".collapsible");
+    var instances = M.Collapsible.init(elems);
+  }
+
   render() {
     return (
-      <div id="navBarPage">
-        <nav className="navbar navbar-default navbar-trans navbar-expand-lg fixed-top">
-          <div className="container">
-            <button
-              className="navbar-toggler collapsed"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarDefault"
-              aria-controls="navbarDefault"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span />
-              <span />
-              <span />
-            </button>
-            <a className="navbar-brand text-brand" href="index.html">
-              Move<span className="color-b">Right</span>
-            </a>
-            <button
-              type="button"
-              className="btn btn-link nav-search navbar-toggle-box-collapse d-md-none"
-              data-toggle="collapse"
-              data-target="#navbarTogglerDemo01"
-              aria-expanded="false"
-            >
-              <span className="fa fa-search" aria-hidden="true" />
-            </button>
-            <div
-              className="navbar-collapse collapse justify-content-center"
-              id="navbarDefault"
-            >
-              <ul className="navbar-nav">
-                <li className="nav-item">
-                  <a className="nav-link active" href="index.html">
-                    Home
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="about.html">
-                    About
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="property-grid.html">
-                    PlacerHolder
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="contact.html">
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <button
-              type="button"
-              className="btn btn-b-n navbar-toggle-box-collapse d-none d-md-block"
-              data-toggle="collapse"
-              data-target="#navbarTogglerDemo01"
-              aria-expanded="false"
-            >
-              <span className="fa fa-search" aria-hidden="true" />
-            </button>
-          </div>
-        </nav>
-      </div>
+      <nav>
+        <div className="nav-wrapper">
+          <a href="#!" className="brand-logo">
+            <i className="material-icons">home</i>MoveRight
+          </a>
+          <ul id="nav-mobile" className="right hide-on-med-and-down">
+            <li>
+              <a href="sass.html">Sass</a>
+            </li>
+            <li>
+              <a href="badges.html">Components</a>
+            </li>
+            <li>
+              <a href="collapsible.html">JavaScript</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
     );
   }
 }

@@ -1,95 +1,66 @@
 import React, { Component } from "react";
+import M from "materialize-css";
+import Slide1 from "../img/slide-1.jpg";
+
+const headerStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center"
+};
+
+const marginTop = { marginTop: "30px" };
 
 class Search extends Component {
+  componentDidMount() {
+    var options = { data: { Test: null } };
+    var elems = document.querySelectorAll(".autocomplete");
+    var instances = M.Autocomplete.init(elems, options);
+  }
+
   render() {
     return (
-      <div id="searchBar">
-        <form className="form-a">
-          <div className="row">
-            <div className="col-md-12 mb-2">
-              <div className="form-group">
-                <label htmlFor="Type">Keyword</label>
-                <input
-                  type="text"
-                  className="form-control form-control-lg form-control-a"
-                  placeholder="Keyword"
-                />
-              </div>
-            </div>
-            <div className="col-md-6 mb-2">
-              <div className="form-group">
-                <label htmlFor="bedrooms">Bedrooms</label>
-                <select
-                  className="form-control form-control-lg form-control-a"
-                  id="bedrooms"
-                >
-                  <option>No min</option>
-                  <option>01</option>
-                  <option>02</option>
-                  <option>03</option>
-                </select>
-              </div>
-            </div>
-            <div className="col-md-6 mb-2">
-              <div className="form-group">
-                <label htmlFor="propertyType">Property Type</label>
-                <select
-                  className="form-control form-control-lg form-control-a"
-                  id="propertyType"
-                >
-                  <option>All</option>
-                  <option>Houses</option>
-                  <option>Flats</option>
-                  <option>Farm/Land</option>
-                </select>
-              </div>
-            </div>
-            <div className="col-md-6 mb-2">
-              <div className="form-group">
-                <label htmlFor="price">Min Price</label>
-                <select
-                  className="form-control form-control-lg form-control-a"
-                  id="price"
-                >
-                  <option>No Min</option>
-                  <option>$50,000</option>
-                  <option>$100,000</option>
-                  <option>$150,000</option>
-                  <option>$200,000</option>
-                </select>
-              </div>
-            </div>
-            <div className="col-md-6 mb-2">
-              <div className="form-group">
-                <label htmlFor="price">Max Price</label>
-                <select
-                  className="form-control form-control-lg form-control-a"
-                  id="price"
-                >
-                  <option>No Max</option>
-                  <option>$50,000</option>
-                  <option>$100,000</option>
-                  <option>$150,000</option>
-                  <option>$200,000</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="col-md-12">
-              <button type="submit" className="btn btn-b">
-                Search For Rent
-              </button>
-            </div>
-            <div className="col-md-12">
-              <button type="submit" className="btn btn-b">
-                Search For Sale
-              </button>
-            </div>
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col s12 l12" style={headerStyle}>
+            <h3>Find the perfect home to buy or rent</h3>
           </div>
-        </form>
+        </div>
+        <div className="row justify-content-between">
+          <div className="input-field col l9 s12 m9">
+            <i className="material-icons prefix">search</i>
+            <input
+              type="text"
+              id="autocomplete-input"
+              className="autocomplete"
+            />
+            <label htmlFor="autocomplete-input">
+              e.g. 'York', 'NW3 5TY' or 'Waterloo Station'
+            </label>
+          </div>
+          <div className="col s6 l1 m1" style={marginTop}>
+            <button
+              className="btn waves-effect waves-light"
+              type="submit"
+              name="action"
+            >
+              ForRent
+            </button>
+          </div>
+          <div className="col s6 l1 md1" style={marginTop}>
+            <button
+              className="btn waves-effect waves-light"
+              type="submit"
+              name="action"
+            >
+              Sale
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 }
 
 export default Search;
+
+// style={{ backgroundImage: `url(${Slide1})` }}
