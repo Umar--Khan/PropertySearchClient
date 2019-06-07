@@ -1,9 +1,9 @@
 import React, { Component } from "react";
+import { Route, Switch } from "react-router-dom";
 
 import NavBar from "./components/NavBar";
 import Home from "./components/Home";
-import Search from "./components/Search";
-import LatestProperties from "./components/LatestProperties";
+import Listings from "./components/Listings";
 import Footer from "./components/Footer";
 
 class App extends Component {
@@ -11,9 +11,10 @@ class App extends Component {
     return (
       <>
         <NavBar />
-        <Home />
-        <Search />
-        <LatestProperties />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/search" component={Listings} />
+        </Switch>
         <Footer />
       </>
     );

@@ -1,32 +1,55 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+
 import M from "materialize-css";
 
 class NavBar extends Component {
   componentDidMount() {
-    var elems = document.querySelectorAll(".collapsible");
-    var instances = M.Collapsible.init(elems);
+    const elems = document.querySelectorAll(".sidenav");
+    return M.Sidenav.init(elems);
   }
 
   render() {
     return (
-      <nav>
-        <div className="nav-wrapper">
-          <a href="#!" className="brand-logo">
-            <i className="material-icons">home</i>MoveRight
-          </a>
-          <ul id="nav-mobile" className="right hide-on-med-and-down">
-            <li>
-              <a href="sass.html">Sass</a>
-            </li>
-            <li>
-              <a href="badges.html">Components</a>
-            </li>
-            <li>
-              <a href="collapsible.html">JavaScript</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+      <div style={{ marginBottom: "40px" }}>
+        <nav>
+          <div className="nav-wrapper">
+            <div className="container">
+              <Link to={"/"} className="brand-logo">
+                <i className="material-icons">home</i>MoveRight
+              </Link>
+              <a href="/" data-target="mobile-demo" className="sidenav-trigger">
+                <i className="material-icons">menu</i>
+              </a>
+              <ul className="right hide-on-med-and-down">
+                <li>
+                  <a href="sass.html">Sass</a>
+                </li>
+                <li>
+                  <a href="badges.html">Components</a>
+                </li>
+                <li>
+                  <a href="badges.html">
+                    <i className="material-icons right">person_pin</i>Sign In
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        <ul className="sidenav" id="mobile-demo">
+          <li>
+            <a href="sass.html">Sass</a>
+          </li>
+          <li>
+            <a href="badges.html">Components</a>
+          </li>
+          <li>
+            <a href="collapsible.html">Contact Us</a>
+          </li>
+        </ul>
+      </div>
     );
   }
 }
