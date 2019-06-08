@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import SearchBar from "./listingsPage/SearchBar";
+import SearchBar from "./rentListingsPage/SearchBar";
 
 class Listings extends Component {
   render() {

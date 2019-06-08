@@ -11,7 +11,7 @@ class NavBar extends Component {
 
   render() {
     return (
-      <div style={{ marginBottom: "40px" }}>
+      <div>
         <nav>
           <div className="nav-wrapper">
             <div className="container">
@@ -23,10 +23,10 @@ class NavBar extends Component {
               </a>
               <ul className="right hide-on-med-and-down">
                 <li>
-                  <a href="sass.html">Sass</a>
+                  <Link to={"/property-to-rent/search"}>Rent</Link>
                 </li>
                 <li>
-                  <a href="badges.html">Components</a>
+                  <Link to={"/property-to-sell/search"}>Buy</Link>
                 </li>
                 <li>
                   <a href="badges.html">
@@ -40,10 +40,10 @@ class NavBar extends Component {
 
         <ul className="sidenav" id="mobile-demo">
           <li>
-            <a href="sass.html">Sass</a>
+            <a href="sass.html">Rent</a>
           </li>
           <li>
-            <a href="badges.html">Components</a>
+            <a href="badges.html">Buy</a>
           </li>
           <li>
             <a href="collapsible.html">Contact Us</a>
