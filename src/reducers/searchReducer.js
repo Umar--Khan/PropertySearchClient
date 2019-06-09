@@ -1,7 +1,9 @@
-import { SAVE_SEARCH_TERM } from "../actions/types";
+import { SAVE_SEARCH_TERM, SAVE_API_DATA } from "../actions/types";
+// import { access } from "fs";
 
 const initialState = {
-  searchTerm: ""
+  searchTerm: "",
+  data: {}
 };
 
 export default function(state = initialState, action) {
@@ -10,6 +12,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         searchTerm: action.payload
+      };
+    case SAVE_API_DATA:
+      return {
+        ...state,
+        data: action.payload
       };
     default:
       return state;

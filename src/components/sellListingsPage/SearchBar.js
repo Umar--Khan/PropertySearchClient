@@ -2,40 +2,62 @@ import React, { Component } from "react";
 
 import { connect } from "react-redux";
 
+import { saveApiData } from "../../actions/searchActions";
+
 import M from "materialize-css";
 
 class SearchBar extends Component {
   state = {
-    dropdownTerm: "1 mile",
-    minPrice: "Min Price",
-    maxPrice: "Max Price"
+    searchTerm: this.props.searchTerm,
+    mileRadius: "1",
+    minPrice: "",
+    maxPrice: "",
+    minBeds: "",
+    maxBeds: "",
+    propertyType: ""
   };
 
   componentDidMount() {
-    const options = { constrainWidth: false };
-    const elems = document.querySelectorAll(".dropdown-trigger");
-    return M.Dropdown.init(elems, options);
+    const elems2 = document.querySelectorAll("select");
+    M.FormSelect.init(elems2);
+
+    if (this.state.searchTerm) {
+      this.runFetchApi();
+    }
   }
 
-  changeDropdown = e => {
-    this.setState({ [e.target.name]: e.target.innerText });
+  handleSelectChange = e => {
+    e.preventDefault();
+    const { value, name } = e.target;
+
+    this.setState({ [name]: value }, () => this.runFetchApi());
+  };
+
+  runFetchApi = () => {
+    const endpoint = `https://api.adzuna.com:443/v1/api/property/gb/search/1?app_id=68f473fd&app_key=a43e6d17d722879b5b2b82bca088bd4a&results_per_page=5&where=${
+      this.state.searchTerm
+    }&category=for-sale`;
+
+    fetch(endpoint)
+      .then(res => res.json())
+      .then(data => {
+        this.props.saveApiData(data);
+      });
   };
 
   numberWithCommas = x => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-  createMinPriceDrop = name => {
-    let li = [];
+  createPriceOptions = () => {
+    let options = [];
     let max = 20000000;
 
     for (let i = 50000; i <= max; ) {
-      li.push(
-        <li key={i}>
-          <a href="#!" name={`${name}`}>
-            {`£${this.numberWithCommas(i)}`}
-          </a>
-        </li>
+      options.push(
+        <option value={`${i}`} key={i}>
+          {`£${this.numberWithCommas(i)}`}
+        </option>
       );
 
       if (i >= 300000 && i < 500000) {
@@ -58,166 +80,133 @@ class SearchBar extends Component {
         i += 10000;
       }
     }
-    return li;
+    return options;
   };
 
-  createUlDropList = (id, name) => {
-    let ul = [];
-    let formatName = "";
+  createMileOptions = () => {
+    let options = [];
 
-    if (name === "maxPrice") {
-      formatName = "Max Price";
-    } else if (name === "minPrice") {
-      formatName = "Min Price";
+    const arr = [3, 5, 10, 15, 20, 30, 40];
+
+    for (let i = 0; i < arr.length; i++) {
+      options.push(
+        <option value={`${arr[i]}`} key={i}>
+          {`${arr[i]} Miles`}
+        </option>
+      );
+    }
+    return options;
+  };
+
+  createBedOptions = () => {
+    let options = [];
+
+    for (let i = 1; i <= 10; i++) {
+      options.push(<option value={`${i}`} key={i}>{`${i} Bed`}</option>);
     }
 
-    ul.push(
-      <ul
-        id={`dropdown${id}`}
-        className="dropdown-content"
-        onClick={this.changeDropdown}
-      >
-        <li>
-          <a href="#!" name={name}>
-            {formatName}
-          </a>
-        </li>
-        {this.createMinPriceDrop(name)}
-        <li>
-          <a href="#!" name={name}>
-            {formatName}
-          </a>
-        </li>
-      </ul>
+    return options;
+  };
+
+  createPropertyTypeOptions = () => {
+    let options = [];
+    options.push(
+      <option value="house_detached" key="1">
+        Detached
+      </option>,
+      <option value="house_semi" key="2">
+        Semi-detached
+      </option>,
+      <option value="house_terraced" key="3">
+        Terraced
+      </option>,
+      <option value="flat" key="4">
+        Flat
+      </option>,
+      <option value="house_bungalow" key="5">
+        Bungalow
+      </option>
     );
+    return options;
   };
 
   render() {
     return (
       <>
-        <div
-          className="container "
-          style={{ minHeight: "50rem", marginTop: "50px" }}
-        >
+        <div className="container " style={{ marginTop: "50px" }}>
           <div className="row">
-            <div className="input-field col l6 m3 s12">
+            <div className="input-field col l2 m3 s12">
               <i className="material-icons prefix">search</i>
               <input
                 type="text"
                 id="autocomplete-input"
                 className="autocomplete"
+                name="searchTerm"
+                onChange={this.handleSelectChange}
                 defaultValue={this.props.searchTerm}
               />
             </div>
-            <div>
-              <a
-                className="dropdown-trigger btn"
-                href="#"
-                data-target="dropdown1"
+            <div className="input-field col s4 l2 m2">
+              <select
+                onChange={this.handleSelectChange}
+                name="mileRadius"
+                defaultValue="1"
               >
-                {this.state.dropdownTerm}
-                <i className="material-icons right">arrow_drop_down</i>
-              </a>
-              <ul
-                id="dropdown1"
-                className="dropdown-content"
-                onClick={this.changeDropdown}
-              >
-                <li>
-                  <a href="#!" name="dropdownTerm">
-                    1/4 Mile
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" name="dropdownTerm">
-                    1/2 Mile
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" name="dropdownTerm">
-                    1 Mile
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" name="dropdownTerm">
-                    2 Miles
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" name="dropdownTerm">
-                    3 Miles
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" name="dropdownTerm">
-                    5 Miles
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" name="dropdownTerm">
-                    10 Miles
-                  </a>
-                </li>
-                <li>
-                  <a href="#!" name="dropdownTerm">
-                    10+ Miles
-                  </a>
-                </li>
-              </ul>
+                <option value="0.25">1/4 Mile</option>
+                <option value="0.5">1/2 Mile</option>
+                <option value="1">1 Mile</option>
+                {this.createMileOptions()}
+              </select>
             </div>
-            <div>
-              <a
-                className="dropdown-trigger btn"
-                href="#"
-                data-target="dropdown2"
+            <div className="input-field col s4 l2 m2">
+              <select
+                onChange={this.handleSelectChange}
+                name="minPrice"
+                value={this.state.maxPrice}
               >
-                {this.state.minPrice}
-                <i className="material-icons right">arrow_drop_down</i>
-              </a>
-              <ul
-                id="dropdown2"
-                className="dropdown-content"
-                onClick={this.changeDropdown}
-              >
-                <li>
-                  <a href="#!" name="minPrice">
-                    Min Price
-                  </a>
-                </li>
-                {this.createMinPriceDrop("minPrice")}
-                <li>
-                  <a href="#!" name="minPrice">
-                    Min Price
-                  </a>
-                </li>
-              </ul>
+                <option value="">Min Price</option>
+                {this.createPriceOptions()}
+              </select>
             </div>
-            <div>
-              <a
-                className="dropdown-trigger btn"
-                href="#"
-                data-target="dropdown3"
+            <div className="input-field col s4 l2 m2">
+              <select
+                onChange={this.handleSelectChange}
+                name="maxPrice"
+                value={this.state.maxPrice}
               >
-                {this.state.maxPrice}
-                <i className="material-icons right">arrow_drop_down</i>
-              </a>
-              <ul
-                id="dropdown3"
-                className="dropdown-content"
-                onClick={this.changeDropdown}
+                <option value="">Max Price</option>
+                {this.createPriceOptions()}
+              </select>
+            </div>
+            <div className="input-field col s4 l2 m2">
+              <select
+                onChange={this.handleSelectChange}
+                name="minBeds"
+                value={this.state.minBeds}
               >
-                <li>
-                  <a href="#!" name="maxPrice">
-                    Max Price
-                  </a>
-                </li>
-                {this.createMinPriceDrop("maxPrice")}
-                <li>
-                  <a href="#!" name="maxPrice">
-                    Max Price
-                  </a>
-                </li>
-              </ul>
+                <option value="">Min Beds</option>
+                {this.createBedOptions()}
+              </select>
+            </div>
+            <div className="input-field col s4 l2 m2">
+              <select
+                onChange={this.handleSelectChange}
+                name="maxBeds"
+                value={this.state.maxBeds}
+              >
+                <option value="">Max Beds</option>
+                {this.createBedOptions()}
+              </select>
+            </div>
+            <div className="input-field col s4 l2 m2">
+              <select
+                onChange={this.handleSelectChange}
+                name="propertyType"
+                value={this.state.propertyType}
+              >
+                <option value="">Property Type</option>
+                {this.createPropertyTypeOptions()}
+              </select>
             </div>
           </div>
         </div>
@@ -232,5 +221,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  null
+  { saveApiData }
 )(SearchBar);

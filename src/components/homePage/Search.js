@@ -18,13 +18,15 @@ class Search extends Component {
   handleOnClick = e => {
     const searchTerm = this.state.searchTerm;
 
-    this.props.saveSearchTerm(searchTerm);
+    if (searchTerm) {
+      this.props.saveSearchTerm(searchTerm);
+    }
   };
 
   componentDidMount() {
-    const options = {
-      data: { Test: null }
-    };
+    // const options = {
+    //   data: { Test: null }
+    // };
     const elems = document.querySelectorAll(".autocomplete");
     return M.Autocomplete.init(elems);
   }
@@ -76,25 +78,6 @@ class Search extends Component {
               </button>
             </Link>
           </div>
-
-          {/* <div className="col s6 l1 m1" style={{marginTop: "30px"}}>
-            <button
-              className="btn waves-effect waves-light"
-              type="submit"
-              name="action"
-            >
-              For Rent
-            </button>
-          </div>
-          <div className="col s6 l1 md1" style={{marginTop: "30px"}}>
-            <button
-              className="btn waves-effect waves-light"
-              type="submit"
-              name="action"
-            >
-              Sale
-            </button>
-          </div> */}
         </div>
       </div>
     );
