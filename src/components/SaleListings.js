@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
-import SearchBar from "./sellListingsPage/SearchBar";
-import PropertyListings from "./sellListingsPage/PropertyListings";
+import SearchBar from "./saleListingsPage/SearchBar";
+import PropertyListings from "./saleListingsPage/PropertyListings";
 
 class Listings extends Component {
   render() {

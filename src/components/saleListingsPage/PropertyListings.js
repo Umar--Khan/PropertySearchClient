@@ -5,71 +5,60 @@ import { connect } from "react-redux";
 
 class PropertyListings extends Component {
   render() {
-    if (this.props.error) {
+    if (this.props.error || !this.props.data.results) {
       return <ErrorPage />;
     }
-    if (this.props.data.results) {
-      const { results, count } = this.props.data;
-      return (
-        <div className="container" style={{ minHeight: "25rem" }}>
-          <div className="row">
-            <div className="col l12 s12 m12">
-              <p>Properties For Sale in</p>{" "}
-              <p style={semiBoldText}>{this.props.searchTerm}</p>
-              <p style={boldText}>{count}</p>
-              <p>results</p>
-            </div>
+
+    const { results, count } = this.props.data;
+    return (
+      <div className="container" style={{ minHeight: "25rem" }}>
+        <div className="row">
+          <div className="col l12 s12 m12">
+            <p>Properties For Sale in</p>{" "}
+            <p style={semiBoldText}>{this.props.searchTerm}</p>
+            <p style={boldText}>{count}</p>
+            <p>results</p>
           </div>
-          <div className="row">
-            {results.map(result => (
-              <React.Fragment key={result.id}>
-                <div className="col l12 s12 m12">
-                  <h4 className="header">{result.title}</h4>
-                  <div className="card horizontal card small">
-                    <div className="card-image">
-                      <img src={result.image_url} alt="thumbnail" />
+        </div>
+        <div className="row">
+          {results.map(result => (
+            <React.Fragment key={result.id}>
+              <div className="col l12 s12 m12">
+                <h4 className="header">{result.title}</h4>
+                <div className="card horizontal card small card-panel hoverable">
+                  <div className="card-image">
+                    <img src={result.image_url} alt="thumbnail" />
+                  </div>
+                  <div className="card-stacked">
+                    <div className="card-content">
+                      <p>{result.description}</p>
                     </div>
-                    <div className="card-stacked">
-                      <div className="card-content">
-                        <p>{result.description}</p>
-                      </div>
-                      <div className="card-action">
-                        <a href="#">View more info</a>
-                      </div>
+                    <div className="card-action">
+                      <a href="#">View more info</a>
                     </div>
                   </div>
                 </div>
-              </React.Fragment>
-            ))}
-          </div>
-          <ul className="pagination">
-            <li className="disabled">
-              <a href="#!">
-                <i className="material-icons">chevron_left</i>
-              </a>
-            </li>
-            <li className="active">
-              <a href="#!">1</a>
-            </li>
-            <li className="waves-effect">
-              <a href="#!">
-                <i className="material-icons">chevron_right</i>
-              </a>
-            </li>
-          </ul>
+              </div>
+            </React.Fragment>
+          ))}
         </div>
-      );
-    } else {
-      return (
-        <div className="container" style={{ minHeight: "25rem" }}>
-          <div className="row">
-            <div className="col l12 m12 s12">
-              <h3 className="center">Try Searching</h3>
-            </div>
-          </div>
-        </div>
-      );
-    }
+        <ul className="pagination">
+          <li className="disabled">
+            <a href="#!">
+              <i className="material-icons">chevron_left</i>
+            </a>
+          </li>
+          <li className="active">
+            <a href="#!">1</a>
+          </li>
+          <li className="waves-effect">
+            <a href="#!">
+              <i className="material-icons">chevron_right</i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    );
   }
 }
 

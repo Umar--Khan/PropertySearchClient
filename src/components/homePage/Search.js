@@ -53,7 +53,7 @@ class Search extends Component {
             </label>
           </div>
           <div className="col l6 m6 s6">
-            <Link to={"/property-to-rent/search"}>
+            <Link to={"/property-for-rent/search"}>
               <button
                 className="waves-effect waves-light btn-large"
                 type="submit"
@@ -66,7 +66,7 @@ class Search extends Component {
             </Link>
           </div>
           <div className="col l6 m6 s6">
-            <Link to={"/property-to-sell/search"}>
+            <Link to={"/property-for-sale/search"}>
               <button
                 className="waves-effect waves-light btn-large"
                 type="submit"

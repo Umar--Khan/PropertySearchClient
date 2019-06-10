@@ -4,7 +4,7 @@ import { Route, Switch } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Home from "./components/Home";
 import RentListings from "./components/RentListings";
-import SellListings from "./components/SellListings";
+import SaleListings from "./components/SaleListings";
 
 import Footer from "./components/Footer";
 
@@ -17,13 +17,13 @@ class App extends Component {
           <Route exact path="/" component={Home} />
           <Route
             exact
-            path="/property-to-rent/search"
+            path="/property-for-rent/search"
             component={RentListings}
           />
           <Route
             exact
-            path="/property-to-sell/search"
-            component={SellListings}
+            path="/property-for-sale/search"
+            component={SaleListings}
           />
         </Switch>
         <Footer />

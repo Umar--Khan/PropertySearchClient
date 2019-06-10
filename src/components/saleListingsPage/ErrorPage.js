@@ -5,7 +5,7 @@ class ErrorPage extends Component {
     return (
       <div className="container" style={{ minHeight: "25rem" }}>
         <div className="col l6 m6 s6">
-          <h4 className="center">Sorry No Results Found</h4>
+          <h4 className="center-align">No Results Found</h4>
         </div>
       </div>
     );
