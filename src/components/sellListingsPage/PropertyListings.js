@@ -1,9 +1,13 @@
 import React, { Component } from "react";
+import ErrorPage from "./ErrorPage";
 
 import { connect } from "react-redux";
 
 class PropertyListings extends Component {
   render() {
+    if (this.props.error) {
+      return <ErrorPage />;
+    }
     if (this.props.data.results) {
       const { results, count } = this.props.data;
       return (
@@ -38,12 +42,31 @@ class PropertyListings extends Component {
               </React.Fragment>
             ))}
           </div>
+          <ul className="pagination">
+            <li className="disabled">
+              <a href="#!">
+                <i className="material-icons">chevron_left</i>
+              </a>
+            </li>
+            <li className="active">
+              <a href="#!">1</a>
+            </li>
+            <li className="waves-effect">
+              <a href="#!">
+                <i className="material-icons">chevron_right</i>
+              </a>
+            </li>
+          </ul>
         </div>
       );
     } else {
       return (
         <div className="container" style={{ minHeight: "25rem" }}>
-          <h1>Nothing to load</h1>
+          <div className="row">
+            <div className="col l12 m12 s12">
+              <h3 className="center">Try Searching</h3>
+            </div>
+          </div>
         </div>
       );
     }
@@ -55,7 +78,8 @@ const semiBoldText = { fontSize: "1.5rem", fontWeight: "400" };
 
 const mapStateToProps = state => ({
   data: state.search.data,
-  searchTerm: state.search.searchTerm
+  searchTerm: state.search.searchTerm,
+  error: state.search.error
 });
 
 export default connect(

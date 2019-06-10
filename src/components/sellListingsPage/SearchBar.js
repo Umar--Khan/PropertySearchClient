@@ -2,14 +2,17 @@ import React, { Component } from "react";
 
 import { connect } from "react-redux";
 
-import { saveApiData, saveSearchTerm } from "../../actions/searchActions";
+import {
+  saveApiData,
+  saveSearchTerm,
+  errorPage
+} from "../../actions/searchActions";
 
 import M from "materialize-css";
 
 class SearchBar extends Component {
   state = {
     searchTerm: this.props.searchTerm,
-
     object: {
       distance: "0.1",
       price_min: "",
@@ -48,31 +51,17 @@ class SearchBar extends Component {
   runQueries = () => {
     const arrKeys = Object.keys(this.state.object);
     const values = arrKeys.map(item => {
-      if (this.state.object[item] && item != "searchTerm") {
+      if (this.state.object[item] && item !== "searchTerm") {
         return `${item}=${this.state.object[item]}`;
       }
     });
-    return values.filter(listItem => listItem != undefined).join("&");
+    return values.filter(listItem => listItem !== undefined).join("&");
   };
 
   runFetchApi = () => {
     let endpoint = `https://cors-anywhere.herokuapp.com/https://api.adzuna.com:443/v1/api/property/gb/search/1?app_id=68f473fd&app_key=a43e6d17d722879b5b2b82bca088bd4a&results_per_page=5&where=${
       this.state.searchTerm
     }&${this.runQueries()}&category=for-sale`;
-
-    // if (this.state.minBeds) {
-    //   debugger;
-    //   endpoint += `&beds=${this.state.minBeds}`;
-    // } else if (this.state.minPrice) {
-    //   debugger;
-    //   endpoint += `&price_min=${this.state.minPrice}`;
-    // } else if (this.state.maxPrice) {
-    //   debugger;
-    //   endpoint += `&price_max=${this.state.maxPrice}`;
-    // } else if (this.state.propertyType) {
-    //   debugger;
-    //   endpoint += `&property_type=${this.state.propertyType}`;
-    // }
 
     const headers = {
       "Content-Type": "application/json",
@@ -88,6 +77,10 @@ class SearchBar extends Component {
       .then(data => {
         console.log("Fetched");
         this.props.saveApiData(data);
+      })
+      .catch(error => {
+        console.log(error);
+        this.props.errorPage(true);
       });
   };
 
@@ -268,5 +261,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { saveApiData, saveSearchTerm }
+  { saveApiData, saveSearchTerm, errorPage }
 )(SearchBar);

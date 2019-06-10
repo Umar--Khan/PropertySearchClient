@@ -1,9 +1,14 @@
-import { SAVE_SEARCH_TERM, SAVE_API_DATA } from "../actions/types";
+import {
+  SAVE_SEARCH_TERM,
+  SAVE_API_DATA,
+  UPDATE_ERROR
+} from "../actions/types";
 // import { access } from "fs";
 
 const initialState = {
   searchTerm: "",
-  data: {}
+  data: {},
+  error: false
 };
 
 export default function(state = initialState, action) {
@@ -17,6 +22,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         data: action.payload
+      };
+    case UPDATE_ERROR:
+      return {
+        ...state,
+        error: action.payload
       };
     default:
       return state;
