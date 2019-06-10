@@ -2,19 +2,21 @@ import React, { Component } from "react";
 
 import { connect } from "react-redux";
 
-import { saveApiData } from "../../actions/searchActions";
+import { saveApiData, saveSearchTerm } from "../../actions/searchActions";
 
 import M from "materialize-css";
 
 class SearchBar extends Component {
   state = {
     searchTerm: this.props.searchTerm,
-    mileRadius: "1",
-    minPrice: "",
-    maxPrice: "",
-    minBeds: "",
-    maxBeds: "",
-    propertyType: ""
+
+    object: {
+      distance: "0.1",
+      price_min: "",
+      price_max: "",
+      beds: "",
+      property_type: ""
+    }
   };
 
   componentDidMount() {
@@ -28,19 +30,63 @@ class SearchBar extends Component {
 
   handleSelectChange = e => {
     e.preventDefault();
+
+    const { value, name } = e.target;
+    this.setState(Object.assign(this.state.object, { [name]: value }), () =>
+      this.runFetchApi()
+    );
+  };
+
+  handleInputChange = e => {
+    e.preventDefault();
+
     const { value, name } = e.target;
 
-    this.setState({ [name]: value }, () => this.runFetchApi());
+    this.setState({ object: { [name]: value } });
+  };
+
+  runQueries = () => {
+    const arrKeys = Object.keys(this.state.object);
+    const values = arrKeys.map(item => {
+      if (this.state.object[item] && item != "searchTerm") {
+        return `${item}=${this.state.object[item]}`;
+      }
+    });
+    return values.filter(listItem => listItem != undefined).join("&");
   };
 
   runFetchApi = () => {
-    const endpoint = `https://api.adzuna.com:443/v1/api/property/gb/search/1?app_id=68f473fd&app_key=a43e6d17d722879b5b2b82bca088bd4a&results_per_page=5&where=${
+    let endpoint = `https://cors-anywhere.herokuapp.com/https://api.adzuna.com:443/v1/api/property/gb/search/1?app_id=68f473fd&app_key=a43e6d17d722879b5b2b82bca088bd4a&results_per_page=5&where=${
       this.state.searchTerm
-    }&category=for-sale`;
+    }&${this.runQueries()}&category=for-sale`;
 
-    fetch(endpoint)
+    // if (this.state.minBeds) {
+    //   debugger;
+    //   endpoint += `&beds=${this.state.minBeds}`;
+    // } else if (this.state.minPrice) {
+    //   debugger;
+    //   endpoint += `&price_min=${this.state.minPrice}`;
+    // } else if (this.state.maxPrice) {
+    //   debugger;
+    //   endpoint += `&price_max=${this.state.maxPrice}`;
+    // } else if (this.state.propertyType) {
+    //   debugger;
+    //   endpoint += `&property_type=${this.state.propertyType}`;
+    // }
+
+    const headers = {
+      "Content-Type": "application/json",
+      "X-Requested-With": "XMLHttpRequest"
+    };
+
+    console.log(endpoint);
+
+    fetch(endpoint, {
+      headers: headers
+    })
       .then(res => res.json())
       .then(data => {
+        console.log("Fetched");
         this.props.saveApiData(data);
       });
   };
@@ -135,23 +181,34 @@ class SearchBar extends Component {
       <>
         <div className="container " style={{ marginTop: "50px" }}>
           <div className="row">
-            <div className="input-field col l2 m3 s12">
-              <i className="material-icons prefix">search</i>
+            <div className="input-field col l4 m3 s12">
+              {/* <a href="#"> */}
+              <i className="material-icons prefix" onClick={this.runFetchApi}>
+                search
+              </i>
+              {/* </a> */}
               <input
                 type="text"
                 id="autocomplete-input"
                 className="autocomplete"
                 name="searchTerm"
-                onChange={this.handleSelectChange}
+                onChange={this.handleInputChange}
+                onKeyPress={e => {
+                  if (e.key === "Enter") {
+                    this.runFetchApi();
+                    this.props.saveSearchTerm(e.target.value);
+                  }
+                }}
                 defaultValue={this.props.searchTerm}
               />
             </div>
             <div className="input-field col s4 l2 m2">
               <select
                 onChange={this.handleSelectChange}
-                name="mileRadius"
-                defaultValue="1"
+                name="distance"
+                defaultValue="0"
               >
+                <option value="0">0 Miles</option>
                 <option value="0.25">1/4 Mile</option>
                 <option value="0.5">1/2 Mile</option>
                 <option value="1">1 Mile</option>
@@ -161,8 +218,8 @@ class SearchBar extends Component {
             <div className="input-field col s4 l2 m2">
               <select
                 onChange={this.handleSelectChange}
-                name="minPrice"
-                value={this.state.maxPrice}
+                name="price_min"
+                value={this.state.price_min}
               >
                 <option value="">Min Price</option>
                 {this.createPriceOptions()}
@@ -171,8 +228,8 @@ class SearchBar extends Component {
             <div className="input-field col s4 l2 m2">
               <select
                 onChange={this.handleSelectChange}
-                name="maxPrice"
-                value={this.state.maxPrice}
+                name="price_max"
+                value={this.state.price_max}
               >
                 <option value="">Max Price</option>
                 {this.createPriceOptions()}
@@ -181,8 +238,8 @@ class SearchBar extends Component {
             <div className="input-field col s4 l2 m2">
               <select
                 onChange={this.handleSelectChange}
-                name="minBeds"
-                value={this.state.minBeds}
+                name="beds"
+                value={this.state.beds}
               >
                 <option value="">Min Beds</option>
                 {this.createBedOptions()}
@@ -191,18 +248,8 @@ class SearchBar extends Component {
             <div className="input-field col s4 l2 m2">
               <select
                 onChange={this.handleSelectChange}
-                name="maxBeds"
-                value={this.state.maxBeds}
-              >
-                <option value="">Max Beds</option>
-                {this.createBedOptions()}
-              </select>
-            </div>
-            <div className="input-field col s4 l2 m2">
-              <select
-                onChange={this.handleSelectChange}
-                name="propertyType"
-                value={this.state.propertyType}
+                name="property_type"
+                value={this.state.object.property_type}
               >
                 <option value="">Property Type</option>
                 {this.createPropertyTypeOptions()}
@@ -221,5 +268,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { saveApiData }
+  { saveApiData, saveSearchTerm }
 )(SearchBar);
