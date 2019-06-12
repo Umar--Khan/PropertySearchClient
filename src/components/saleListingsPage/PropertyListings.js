@@ -75,36 +75,3 @@ export default connect(
   mapStateToProps,
   null
 )(PropertyListings);
-
-// {
-//       "is_furnished": "0",
-//       "location": {
-//         "__CLASS__": "Adzuna::API::Response::Location",
-//         "display_name": "Finsbury Park, North London",
-//         "area": [
-//           "UK",
-//           "London",
-//           "North London",
-//           "Finsbury Park"
-//         ]
-//       },
-//       "title": "3 bed flat for sale in Devan Grove",
-//       "postcode": "N42GS",
-//       "__CLASS__": "Adzuna::API::Response::Property",
-//       "longitude": -0.095974,
-//       "redirect_url": "https://property.adzuna.co.uk/land/ad/1065773369?se=b1nJRrdKSWGhJREaR2M5Ng&utm_medium=api&utm_source=68f473fd&v=42159A990B2040926B89BB0718D517C8A441F491",
-//       "beds": 3,
-//       "id": 1065773369,
-//       "category": {
-//         "__CLASS__": "Adzuna::API::Response::Category",
-//         "label": "For Sale",
-//         "tag": "for-sale"
-//       },
-//       "adref": "eyJhbGciOiJIUzI1NiJ9.eyJpIjoxMDY1NzczMzY5LCJzIjoiYjFuSlJyZEtTV0doSlJFYVIyTTVOZyJ9.WjIjBrQxxAPa59_GMK4iQ4VGnRjV-tcL-sY6F6axVAA",
-//       "image_url": "https://s3-eu-west-1.amazonaws.com/property.adzuna.co.uk/a5ace14850737b228f170aaa46f6d00bf82e549b3fd6b18cdbb32a26859b23e6.jpeg",
-//       "property_type": "flat",
-//       "description": "Key featuresStunning three bedroom apartment (one en suite bathrooms)Hi Spec Fixtures and Fittings Very large ,modern reception room leading to the BalconyFeatures sleek kitchen with integrated appliancesWater ViewsOn suite 24hr concierge, landscaped communal gardensAccess to on site gymnasiumWalking Distance of Manor House Station",
-//       "created": "2019-01-25T01:36:00Z",
-//       "latitude": 51.564301,
-//       "sale_price": 950000
-//     }

@@ -1,3 +1,6 @@
 export const SAVE_SEARCH_TERM = "SAVE_SEARCH_TERM";
 export const SAVE_API_DATA = "SAVE_API_DATA";
 export const UPDATE_ERROR = "UPDATE_ERROR";
+
+export const SAVE_TOKEN_USER = "SAVE_TOKEN_USER";
+export const UPDATE_SIGN_STATUS = "SAVE_TOKEN_USER";

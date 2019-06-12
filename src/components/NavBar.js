@@ -1,13 +1,25 @@
 import React, { Component } from "react";
+
 import { Link } from "react-router-dom";
+
+import { connect } from "react-redux";
+
+import { saveTokenUser } from "../actions/userActions";
 
 import M from "materialize-css";
 
 class NavBar extends Component {
   componentDidMount() {
     const elems = document.querySelectorAll(".sidenav");
-    return M.Sidenav.init(elems);
+    M.Sidenav.init(elems);
+    const elems2 = document.querySelectorAll(".modal");
+    M.Modal.init(elems2);
   }
+
+  signOut = () => {
+    this.props.saveTokenUser("");
+    localStorage.removeItem("token");
+  };
 
   render() {
     return (
@@ -29,24 +41,43 @@ class NavBar extends Component {
                   <Link to={"/property-to-sell/search"}>Buy</Link>
                 </li>
                 <li>
-                  <a href="badges.html">
-                    <i className="material-icons right">person_pin</i>Sign In
-                  </a>
+                  {this.props.token ? (
+                    <Link to={"/account"}>
+                      <i className="material-icons right">face</i>
+                      Account
+                    </Link>
+                  ) : (
+                    <Link to={"/signin"}>
+                      <i className="material-icons right">person_pin</i>Sign In
+                    </Link>
+                  )}
+                  }
                 </li>
+                {this.props.token ? (
+                  <li onClick={this.signOut}>
+                    <a href="#">
+                      <i className="material-icons right">exit_to_app</i>
+                      Sign Out
+                    </a>
+                  </li>
+                ) : (
+                  <> </>
+                )}
               </ul>
             </div>
           </div>
         </nav>
-
         <ul className="sidenav" id="mobile-demo">
           <li>
-            <a href="sass.html">Rent</a>
+            <Link to={"/property-to-rent/search"}>Rent</Link>
           </li>
           <li>
-            <a href="badges.html">Buy</a>
+            <Link to={"/property-to-sell/search"}>Buy</Link>
           </li>
           <li>
-            <a href="collapsible.html">Contact Us</a>
+            <a className="modal-trigger" href="#modal1">
+              <i className="material-icons right">person_pin</i>Sign In
+            </a>
           </li>
         </ul>
       </div>
@@ -54,4 +85,11 @@ class NavBar extends Component {
   }
 }
 
-export default NavBar;
+const mapStateToProps = state => ({
+  token: state.user.token
+});
+
+export default connect(
+  mapStateToProps,
+  { saveTokenUser }
+)(NavBar);

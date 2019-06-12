@@ -3,7 +3,6 @@ import {
   SAVE_API_DATA,
   UPDATE_ERROR
 } from "../actions/types";
-// import { access } from "fs";
 
 const initialState = {
   searchTerm: "",
