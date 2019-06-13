@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import { connect } from "react-redux";
 
-import { saveTokenUser, updateSignStatus } from "../../actions/userActions";
+import { saveCurrentUser } from "../../actions/userActions";
 
 class SignUp extends Component {
   state = {
@@ -44,7 +44,7 @@ class SignUp extends Component {
       .then(resp => resp.json())
       .then(data => {
         if (data.user) {
-          this.props.saveTokenUser(data.user.token);
+          this.props.saveCurrentUser(data.user);
           localStorage.setItem("token", data.user.token);
           this.props.history.push("/");
         } else if (data.errors) {
@@ -113,10 +113,10 @@ class SignUp extends Component {
 }
 
 const mapStateToProps = state => ({
-  token: state.user.token
+  currentUser: state.user.currentUser
 });
 
 export default connect(
   mapStateToProps,
-  { saveTokenUser, updateSignStatus }
+  { saveCurrentUser }
 )(SignUp);

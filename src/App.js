@@ -7,14 +7,33 @@ import RentListings from "./components/RentListings";
 import SaleListings from "./components/SaleListings";
 import SignIn from "./components/signInSignOut/SignIn";
 import SignUp from "./components/signInSignOut/SignUp";
+import Account from "./components/Account";
 
 import Footer from "./components/Footer";
 
 import { connect } from "react-redux";
+import { saveCurrentUser } from "./actions/userActions";
 
 class App extends Component {
   componentDidMount() {
-    if (localStorage.getItem("token")) {
+    const apiUrl = "http://localhost:3001/api";
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      return fetch(apiUrl + "/user", {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          Authorization: `Token ${token}`
+        }
+      })
+        .then(resp => resp.json())
+        .then(data => {
+          if (data.user) {
+            this.props.saveCurrentUser(data.user);
+          }
+        })
+        .catch(err => console.log(err));
     }
   }
 
@@ -36,6 +55,7 @@ class App extends Component {
           />
           <Route exact path="/signin" component={SignIn} />
           <Route exact path="/signup" component={SignUp} />
+          <Route exact path="/account" component={Account} />
         </Switch>
         <Footer {...this.props} />
       </>
@@ -43,11 +63,7 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  token: state.user.token
-});
-
 export default connect(
-  mapStateToProps,
-  null
+  null,
+  { saveCurrentUser }
 )(withRouter(App));

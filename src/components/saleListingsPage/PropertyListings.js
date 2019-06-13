@@ -1,15 +1,22 @@
+import _ from "lodash";
+
 import React, { Component } from "react";
 import ErrorPage from "./ErrorPage";
 
 import { connect } from "react-redux";
 
 class PropertyListings extends Component {
+  numberWithCommas = x => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   render() {
     if (this.props.error || !this.props.data.results) {
       return <ErrorPage />;
     }
 
     const { results, count } = this.props.data;
+
     return (
       <div className="container" style={{ minHeight: "25rem" }}>
         <div className="row">
@@ -24,18 +31,22 @@ class PropertyListings extends Component {
           {results.map(result => (
             <React.Fragment key={result.id}>
               <div className="col l12 s12 m12">
-                <h4 className="header">{result.title}</h4>
                 <div className="card horizontal card small card-panel hoverable">
                   <div className="card-image">
                     <img src={result.image_url} alt="thumbnail" />
                   </div>
                   <div className="card-stacked">
                     <div className="card-content">
+                      <h5>
+                        {result.beds} bedroom{" "}
+                        {_.lowerCase(result.property_type)}{" "}
+                        {_.lowerCase(result.category.label)}
+                      </h5>
                       <p>{result.description}</p>
                     </div>
-                    <div className="card-action">
-                      <a href="#">View more info</a>
-                    </div>
+                  </div>
+                  <div className="valign-wrapper">
+                    <h4>£{this.numberWithCommas(result.sale_price)}</h4>
                   </div>
                 </div>
               </div>

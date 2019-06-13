@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import { connect } from "react-redux";
 
-import { saveTokenUser } from "../actions/userActions";
+import { saveCurrentUser } from "../actions/userActions";
 
 import M from "materialize-css";
 
@@ -17,7 +17,7 @@ class NavBar extends Component {
   }
 
   signOut = () => {
-    this.props.saveTokenUser("");
+    this.props.saveCurrentUser("");
     localStorage.removeItem("token");
   };
 
@@ -38,10 +38,10 @@ class NavBar extends Component {
                   <Link to={"/property-to-rent/search"}>Rent</Link>
                 </li>
                 <li>
-                  <Link to={"/property-to-sell/search"}>Buy</Link>
+                  <Link to={"/property-for-sale/search"}>Buy</Link>
                 </li>
                 <li>
-                  {this.props.token ? (
+                  {this.props.currentUser ? (
                     <Link to={"/account"}>
                       <i className="material-icons right">face</i>
                       Account
@@ -53,7 +53,7 @@ class NavBar extends Component {
                   )}
                   }
                 </li>
-                {this.props.token ? (
+                {this.props.currentUser ? (
                   <li onClick={this.signOut}>
                     <a href="#">
                       <i className="material-icons right">exit_to_app</i>
@@ -72,13 +72,30 @@ class NavBar extends Component {
             <Link to={"/property-to-rent/search"}>Rent</Link>
           </li>
           <li>
-            <Link to={"/property-to-sell/search"}>Buy</Link>
+            <Link to={"/property-for-sale/search"}>Buy</Link>
           </li>
           <li>
-            <a className="modal-trigger" href="#modal1">
-              <i className="material-icons right">person_pin</i>Sign In
-            </a>
+            {this.props.currentUser ? (
+              <Link to={"/account"}>
+                <i className="material-icons right">face</i>
+                Account
+              </Link>
+            ) : (
+              <Link to={"/signin"}>
+                <i className="material-icons right">person_pin</i>Sign In
+              </Link>
+            )}
           </li>
+          {this.props.currentUser ? (
+            <li onClick={this.signOut}>
+              <a href="#">
+                <i className="material-icons right">exit_to_app</i>
+                Sign Out
+              </a>
+            </li>
+          ) : (
+            <> </>
+          )}
         </ul>
       </div>
     );
@@ -86,10 +103,10 @@ class NavBar extends Component {
 }
 
 const mapStateToProps = state => ({
-  token: state.user.token
+  currentUser: state.user.currentUser
 });
 
 export default connect(
   mapStateToProps,
-  { saveTokenUser }
+  { saveCurrentUser }
 )(NavBar);

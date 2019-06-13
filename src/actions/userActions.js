@@ -1,15 +1,8 @@
-import { SAVE_TOKEN_USER, UPDATE_SIGN_STATUS } from "./types";
+import { SAVE_CURRENT_USER } from "./types";
 
-export const saveTokenUser = user => dispatch => {
+export const saveCurrentUser = user => dispatch => {
   dispatch({
-    type: SAVE_TOKEN_USER,
-    payload: user
-  });
-};
-
-export const updateSignStatus = user => dispatch => {
-  dispatch({
-    type: UPDATE_SIGN_STATUS,
+    type: SAVE_CURRENT_USER,
     payload: user
   });
 };
