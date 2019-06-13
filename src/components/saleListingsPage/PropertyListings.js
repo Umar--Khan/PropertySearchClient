@@ -10,6 +10,30 @@ class PropertyListings extends Component {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  favoriteProperty = property => {
+    const apiUrl = "http://localhost:3001/api";
+    const token = localStorage.getItem("token");
+
+    const userId = this.props.currentUser._id;
+
+    console.log(userId);
+
+    if (token) {
+      return fetch(apiUrl + `/${userId}/favorite`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          Authorization: `Token ${token}`
+        },
+        body: JSON.stringify({ property: property })
+      })
+        .then(resp => resp.json())
+        .then(data => console.log(data))
+        .catch(err => console.log(err));
+    }
+  };
+
   render() {
     if (this.props.error || !this.props.data.results) {
       return <ErrorPage />;
@@ -33,6 +57,13 @@ class PropertyListings extends Component {
               <div className="col l12 s12 m12">
                 <div className="card horizontal card small card-panel hoverable">
                   <div className="card-image">
+                    <a
+                      className="btn-floating halfway-fab waves-effect waves-light red"
+                      onClick={() => this.favoriteProperty(result)}
+                      href="#!"
+                    >
+                      <i className="material-icons">add</i>
+                    </a>
                     <img src={result.image_url} alt="thumbnail" />
                   </div>
                   <div className="card-stacked">
@@ -42,7 +73,17 @@ class PropertyListings extends Component {
                         {_.lowerCase(result.property_type)}{" "}
                         {_.lowerCase(result.category.label)}
                       </h5>
-                      <p>{result.description}</p>
+                      <h6 style={semiBoldText}>
+                        {result.location.display_name}
+                      </h6>
+                      <p>
+                        {_.truncate(result.description, {
+                          length: 175
+                        })}
+                      </p>
+                    </div>
+                    <div className="card-action">
+                      <a href="#">View More Info</a>
                     </div>
                   </div>
                   <div className="valign-wrapper">
@@ -79,7 +120,8 @@ const semiBoldText = { fontSize: "1.5rem", fontWeight: "400" };
 const mapStateToProps = state => ({
   data: state.search.data,
   searchTerm: state.search.searchTerm,
-  error: state.search.error
+  error: state.search.error,
+  currentUser: state.user.currentUser
 });
 
 export default connect(

@@ -44,7 +44,7 @@ class NavBar extends Component {
                   {this.props.currentUser ? (
                     <Link to={"/account"}>
                       <i className="material-icons right">face</i>
-                      Account
+                      My MoveRight
                     </Link>
                   ) : (
                     <Link to={"/signin"}>

@@ -9,6 +9,8 @@ import SignIn from "./components/signInSignOut/SignIn";
 import SignUp from "./components/signInSignOut/SignUp";
 import Account from "./components/Account";
 
+import FavPropertiesList from "./components/AccountPage/FavPropertiesList";
+
 import Footer from "./components/Footer";
 
 import { connect } from "react-redux";
@@ -55,7 +57,7 @@ class App extends Component {
           />
           <Route exact path="/signin" component={SignIn} />
           <Route exact path="/signup" component={SignUp} />
-          <Route exact path="/account" component={Account} />
+          <Route exact path="/account" component={FavPropertiesList} />
         </Switch>
         <Footer {...this.props} />
       </>
