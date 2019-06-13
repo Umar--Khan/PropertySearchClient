@@ -5,30 +5,15 @@ import M from "materialize-css";
 
 import { connect } from "react-redux";
 
+import { saveCurrentUser } from "../../actions/userActions";
+
 class FavPropertiesList extends Component {
   componentDidMount() {
     const el = document.querySelectorAll(".tabs");
     M.Tabs.init(el);
 
-    const apiUrl = "http://localhost:3001/api";
     const token = localStorage.getItem("token");
-
-    if (token) {
-      return fetch(apiUrl + "/user", {
-        headers: {
-          "Content-Type": "application/json",
-          "X-Requested-With": "XMLHttpRequest",
-          Authorization: `Token ${token}`
-        }
-      })
-        .then(resp => resp.json())
-        .then(data => {
-          if (data.user) {
-            this.props.saveCurrentUser(data.user);
-          }
-        })
-        .catch(err => console.log(err));
-    } else {
+    if (!token) {
       this.props.history.push("/");
     }
   }
@@ -37,9 +22,30 @@ class FavPropertiesList extends Component {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  unFavoriteProperty = property => {
+    const apiUrl = "http://localhost:3001/api";
+    const token = localStorage.getItem("token");
+
+    const userId = this.props.currentUser._id;
+
+    if (token) {
+      return fetch(apiUrl + `/${userId}/favorite`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          Authorization: `Token ${token}`
+        },
+        body: JSON.stringify({ property: property })
+      })
+        .then(resp => resp.json())
+        .then(data => this.props.saveCurrentUser(data.user))
+        .catch(err => console.log(err));
+    }
+  };
+
   render() {
     const { properties } = this.props.currentUser;
-
     return (
       <div className="container" style={{ minHeight: "35rem" }}>
         <div className="row">
@@ -60,32 +66,32 @@ class FavPropertiesList extends Component {
           </div>
           <div id="test1" className="col s12">
             <div className="row">
-              {properties.map(result => (
-                <React.Fragment key={result.id}>
+              {properties.map(prop => (
+                <React.Fragment key={prop.id}>
                   <div className="col l12 s12 m12">
                     <div className="card horizontal card small card-panel hoverable">
                       <div className="card-image">
                         <a
                           className="btn-floating halfway-fab waves-effect waves-light red"
-                          onClick={() => this.favoriteProperty(result)}
+                          onClick={() => this.unFavoriteProperty(prop)}
                           href="#!"
                         >
-                          <i className="material-icons">add</i>
+                          <i className="material-icons">delete</i>
                         </a>
-                        <img src={result.image_url} alt="thumbnail" />
+                        <img src={prop.image_url} alt="thumbnail" />
                       </div>
                       <div className="card-stacked">
                         <div className="card-content">
                           <h5>
-                            {result.beds} bedroom{" "}
-                            {_.lowerCase(result.property_type)}{" "}
-                            {_.lowerCase(result.category.label)}
+                            {prop.beds} bedroom{" "}
+                            {_.lowerCase(prop.property_type)}{" "}
+                            {_.lowerCase(prop.category.label)}
                           </h5>
                           <h6 style={semiBoldText}>
-                            {result.location.display_name}
+                            {prop.location.display_name}
                           </h6>
                           <p>
-                            {_.truncate(result.description, {
+                            {_.truncate(prop.description, {
                               length: 175
                             })}
                           </p>
@@ -95,7 +101,7 @@ class FavPropertiesList extends Component {
                         </div>
                       </div>
                       <div className="valign-wrapper">
-                        <h4>£{this.numberWithCommas(result.sale_price)}</h4>
+                        <h4>£{this.numberWithCommas(prop.sale_price)}</h4>
                       </div>
                     </div>
                   </div>
@@ -123,5 +129,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  null
+  { saveCurrentUser }
 )(FavPropertiesList);

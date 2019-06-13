@@ -4,21 +4,22 @@ import React, { Component } from "react";
 import ErrorPage from "./ErrorPage";
 
 import { connect } from "react-redux";
+import { saveCurrentUser } from "../../actions/userActions";
 
 class PropertyListings extends Component {
   numberWithCommas = x => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-  favoriteProperty = property => {
+  favoriteProperty = (property, e) => {
+    e.target.parentElement.remove();
     const apiUrl = "http://localhost:3001/api";
     const token = localStorage.getItem("token");
 
     const userId = this.props.currentUser._id;
 
-    console.log(userId);
-
     if (token) {
+      e.target.parentElement.remove();
       return fetch(apiUrl + `/${userId}/favorite`, {
         method: "POST",
         headers: {
@@ -29,7 +30,7 @@ class PropertyListings extends Component {
         body: JSON.stringify({ property: property })
       })
         .then(resp => resp.json())
-        .then(data => console.log(data))
+        .then(data => this.props.saveCurrentUser(data.user))
         .catch(err => console.log(err));
     }
   };
@@ -59,8 +60,8 @@ class PropertyListings extends Component {
                   <div className="card-image">
                     <a
                       className="btn-floating halfway-fab waves-effect waves-light red"
-                      onClick={() => this.favoriteProperty(result)}
-                      href="#!"
+                      onClick={e => this.favoriteProperty(result, e)}
+                      href="#"
                     >
                       <i className="material-icons">add</i>
                     </a>
@@ -126,5 +127,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  null
+  { saveCurrentUser }
 )(PropertyListings);
