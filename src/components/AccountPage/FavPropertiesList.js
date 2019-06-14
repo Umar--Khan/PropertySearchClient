@@ -18,6 +18,16 @@ class FavPropertiesList extends Component {
     }
   }
 
+  componentDidUpdate() {
+    const el = document.querySelectorAll(".tabs");
+    M.Tabs.init(el);
+  }
+
+  reloadThing() {
+    const el = document.querySelectorAll(".tabs");
+    M.Tabs.init(el);
+  }
+
   numberWithCommas = x => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
@@ -48,74 +58,76 @@ class FavPropertiesList extends Component {
     const { properties } = this.props.currentUser;
     return (
       <div className="container" style={{ minHeight: "35rem" }}>
-        <div className="row">
-          <div className="col s12">
-            <ul className="tabs">
-              <li className="tab col s4">
-                <a className="active" href="#test1">
-                  Saved Properties ({properties.length})
-                </a>
-              </li>
-              <li className="tab col s4">
-                <a href="#test2">Saved Searches</a>
-              </li>
-              <li className="tab col s4">
-                <a href="#test3">My Details</a>
-              </li>
-            </ul>
-          </div>
-          <div id="test1" className="col s12">
-            <div className="row">
-              {properties.map(prop => (
-                <React.Fragment key={prop.id}>
-                  <div className="col l12 s12 m12">
-                    <div className="card horizontal card small card-panel hoverable">
-                      <div className="card-image">
-                        <a
-                          className="btn-floating halfway-fab waves-effect waves-light red"
-                          onClick={() => this.unFavoriteProperty(prop)}
-                          href="#!"
-                        >
-                          <i className="material-icons">delete</i>
-                        </a>
-                        <img src={prop.image_url} alt="thumbnail" />
-                      </div>
-                      <div className="card-stacked">
-                        <div className="card-content">
-                          <h5>
-                            {prop.beds} bedroom{" "}
-                            {_.lowerCase(prop.property_type)}{" "}
-                            {_.lowerCase(prop.category.label)}
-                          </h5>
-                          <h6 style={semiBoldText}>
-                            {prop.location.display_name}
-                          </h6>
-                          <p>
-                            {_.truncate(prop.description, {
-                              length: 175
-                            })}
-                          </p>
+        {this.props.currentUser && (
+          <div className="row">
+            <div className="col s12">
+              <ul className="tabs">
+                <li className="tab col s4">
+                  <a className="active" href="#test1">
+                    Saved Properties ({properties.length})
+                  </a>
+                </li>
+                <li className="tab col s4">
+                  <a href="#test2">Saved Searches</a>
+                </li>
+                <li className="tab col s4">
+                  <a href="#test3">My Details</a>
+                </li>
+              </ul>
+            </div>
+            <div id="test1" className="col s12">
+              <div className="row">
+                {properties.map(prop => (
+                  <React.Fragment key={prop.id}>
+                    <div className="col l12 s12 m12">
+                      <div className="card horizontal card small card-panel hoverable">
+                        <div className="card-image">
+                          <a
+                            className="btn-floating halfway-fab waves-effect waves-light red"
+                            onClick={() => this.unFavoriteProperty(prop)}
+                            href="#!"
+                          >
+                            <i className="material-icons">delete</i>
+                          </a>
+                          <img src={prop.image_url} alt="thumbnail" />
                         </div>
-                        <div className="card-action">
-                          <a href="#">View More Info</a>
+                        <div className="card-stacked">
+                          <div className="card-content">
+                            <h5>
+                              {prop.beds} bedroom{" "}
+                              {_.lowerCase(prop.property_type)}{" "}
+                              {_.lowerCase(prop.category.label)}
+                            </h5>
+                            <h6 style={semiBoldText}>
+                              {prop.location.display_name}
+                            </h6>
+                            <p>
+                              {_.truncate(prop.description, {
+                                length: 175
+                              })}
+                            </p>
+                          </div>
+                          <div className="card-action">
+                            <a href="#">View More Info</a>
+                          </div>
                         </div>
-                      </div>
-                      <div className="valign-wrapper">
-                        <h4>£{this.numberWithCommas(prop.sale_price)}</h4>
+                        <div className="valign-wrapper">
+                          <h4>£{this.numberWithCommas(prop.sale_price)}</h4>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </React.Fragment>
-              ))}
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+            <div id="test2" className="col s12">
+              Test 2
+            </div>
+            <div id="test3" className="col s12">
+              Test 3
             </div>
           </div>
-          <div id="test2" className="col s12">
-            Test 2
-          </div>
-          <div id="test3" className="col s12">
-            Test 3
-          </div>
-        </div>
+        )}
       </div>
     );
   }

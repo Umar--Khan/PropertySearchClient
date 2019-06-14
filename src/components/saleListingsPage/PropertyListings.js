@@ -12,6 +12,7 @@ class PropertyListings extends Component {
   };
 
   favoriteProperty = (property, e) => {
+    e.preventDefault();
     e.target.parentElement.remove();
     const apiUrl = "http://localhost:3001/api";
     const token = localStorage.getItem("token");
@@ -34,6 +35,10 @@ class PropertyListings extends Component {
         .catch(err => console.log(err));
     }
   };
+
+  checkFavorites() {
+    console.log(this.props.currentUser);
+  }
 
   render() {
     if (this.props.error || !this.props.data.results) {

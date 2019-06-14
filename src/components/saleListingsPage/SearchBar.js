@@ -27,6 +27,10 @@ class SearchBar extends Component {
     if (this.state.where) {
       this.runFetchApi();
     }
+
+    if (!this.state.where) {
+      this.props.errorPage("No Search Term");
+    }
   }
 
   handleSelectChange = e => {
