@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-
 import { connect } from "react-redux";
 
 import {
   saveApiData,
   saveSearchTerm,
-  errorPage
+  errorPage,
+  updatePageNumber,
+  updateMaxResultsNumber
 } from "../../actions/searchActions";
 
 import M from "materialize-css";
@@ -60,22 +61,43 @@ class SearchBar extends Component {
     return values.filter(listItem => listItem !== undefined).join("&");
   };
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.pageNumber !== this.props.pageNumber) {
+      this.runFetchApi();
+    }
+    if (prevProps.maxResultsNumber !== this.props.maxResultsNumber) {
+      if (this.props.maxResultsNumber) {
+        this.runFetchApi();
+      }
+    }
+  }
+
   runFetchApi = () => {
-    let endpoint = `https://cors-anywhere.herokuapp.com/https://api.adzuna.com:443/v1/api/property/gb/search/1?app_id=68f473fd&app_key=a43e6d17d722879b5b2b82bca088bd4a&results_per_page=5&${this.runQueries()}&category=for-sale`;
+    if (!this.state.where) {
+      this.props.errorPage("No Search Term");
+      this.props.saveApiData("");
+      return;
+    }
+
+    this.props.errorPage("Loading");
+
+    let endpoint = `https://cors-anywhere.herokuapp.com/https://api.adzuna.com:443/v1/api/property/gb/search/${
+      this.props.pageNumber
+    }?app_id=68f473fd&app_key=a43e6d17d722879b5b2b82bca088bd4a&results_per_page=${
+      this.props.maxResultsNumber
+    }&${this.runQueries()}&category=for-sale`;
 
     const headers = {
       "Content-Type": "application/json",
       "X-Requested-With": "XMLHttpRequest"
     };
 
-    console.log(endpoint);
-
     fetch(endpoint, {
       headers: headers
     })
       .then(res => res.json())
       .then(data => {
-        console.log("Fetched");
+        console.log(endpoint);
         this.props.saveApiData(data);
         if (this.props.errorPage) {
           this.props.errorPage(false);
@@ -172,6 +194,21 @@ class SearchBar extends Component {
     return options;
   };
 
+  handleMaxNumberChange = e => {
+    const { value } = e.target;
+    this.props.updateMaxResultsNumber(value);
+  };
+
+  checkLength = e => {
+    let { value } = e.target;
+    if (value > 50) {
+      value = 50;
+    }
+    if (value < 1) {
+      value = 1;
+    }
+  };
+
   render() {
     return (
       <div className="container " style={{ marginTop: "50px" }}>
@@ -188,11 +225,13 @@ class SearchBar extends Component {
               onChange={this.handleInputChange}
               onKeyPress={e => {
                 if (e.key === "Enter") {
-                  this.runFetchApi();
                   this.props.saveSearchTerm(e.target.value);
+                  this.props.errorPage("");
+                  this.runFetchApi();
                 }
               }}
               defaultValue={this.props.searchTerm}
+              required
             />
           </div>
           <div className="input-field col s4 l2 m2">
@@ -248,6 +287,20 @@ class SearchBar extends Component {
               {this.createPropertyTypeOptions()}
             </select>
           </div>
+          <h6>Results Per Page</h6>
+          <div className="input-field col s2 l2 m2" style={{ margin: "0" }}>
+            <i className="material-icons prefix">find_in_page</i>
+            <input
+              id="icon_telephone"
+              type="number"
+              className="validate center"
+              min="1"
+              onChange={this.handleMaxNumberChange}
+              max="50"
+              value={this.props.maxResultsNumber}
+              onInput={this.checkLength}
+            />
+          </div>
         </div>
       </div>
     );
@@ -255,10 +308,19 @@ class SearchBar extends Component {
 }
 
 const mapStateToProps = state => ({
-  searchTerm: state.search.searchTerm
+  searchTerm: state.search.searchTerm,
+  pageNumber: state.search.pageNumber,
+  maxResultsNumber: state.search.maxResultsNumber,
+  error: state.search.error
 });
 
 export default connect(
   mapStateToProps,
-  { saveApiData, saveSearchTerm, errorPage }
+  {
+    saveApiData,
+    saveSearchTerm,
+    errorPage,
+    updatePageNumber,
+    updateMaxResultsNumber
+  }
 )(SearchBar);

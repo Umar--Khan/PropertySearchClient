@@ -65,52 +65,79 @@ class SignIn extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="col s12">
-          <h4 className="center">Sign In</h4>
-        </div>
-        <div className="col s8 offset-s2">
-          <form className="col s12" onSubmit={this.updateUser}>
-            <div className="input-field col s12">
-              <input
-                id="email_inline"
-                type="email"
-                className="validate"
-                onChange={this.handleOnChange}
-              />
-              <label htmlFor="email_inline">Email</label>
-              <span
-                className="helper-text"
-                data-error={this.state.errors}
-                data-success="Correct"
-              />
+      <div className="container valign-wrapper" style={{ minHeight: "40rem" }}>
+        <div className="row">
+          <div className="col l6 m6 s12">
+            <div className="center">
+              <h4>Sign In</h4>
             </div>
+            <form className="col s12 l12 m12" onSubmit={this.updateUser}>
+              <div className="input-field col s12">
+                <input
+                  id="email_inline"
+                  type="email"
+                  className="validate"
+                  onChange={this.handleOnChange}
+                />
+                <label htmlFor="email_inline">Email</label>
+                <span
+                  className="helper-text"
+                  data-error={this.state.errors}
+                  data-success="Correct"
+                />
+              </div>
 
-            <div className="input-field col s12">
-              <input
-                id="password"
-                type="password"
-                className="validate"
-                onChange={this.handleOnChange}
-              />
-              <label htmlFor="password">Password</label>
+              <div className="input-field col s12">
+                <input
+                  id="password"
+                  type="password"
+                  className="validate"
+                  onChange={this.handleOnChange}
+                />
+                <label htmlFor="password">Password</label>
+              </div>
+              <div className="center">
+                <button
+                  type="submit"
+                  className="waves-effect waves-light btn"
+                  id="create_account"
+                >
+                  Sign In
+                </button>
+              </div>
+            </form>
+          </div>
+          <div className="col l6 s12 m6">
+            <div className="center">
+              <h4 style={{ minHeight: "3rem" }}>New to MoveRight?</h4>
+              <h5 style={{ minHeight: "3rem" }}>
+                Create a account so you can:
+              </h5>
+              <ul>
+                <li style={{ minHeight: "3rem" }}>
+                  <i className="material-icons">save</i> Save Properties
+                </li>
+                <li style={{ minHeight: "3rem" }}>
+                  <i className="material-icons">search</i>Create & save your own
+                  search areas
+                </li>
+                <li style={{ minHeight: "3rem" }}>
+                  <i className="material-icons">bubble_chart</i>Let us recommend
+                  you some properties
+                </li>
+              </ul>
             </div>
-            <button
-              type="submit"
-              className="waves-effect waves-light btn"
-              id="create_account"
-            >
-              Sign In
-            </button>
-          </form>
-          <Link to={"/signup"}>
-            <button
-              className="waves-effect waves-light btn"
-              id="already_account"
-            >
-              Create a Account
-            </button>
-          </Link>
+            <div className="center">
+              <Link to={"/signup"}>
+                <button
+                  className="waves-effect waves-light btn"
+                  id="already_account"
+                >
+                  Create a Account
+                </button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     );

@@ -1,9 +1,9 @@
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import _ from "lodash";
 
-import React, { Component } from "react";
 import ErrorPage from "./ErrorPage";
 
-import { connect } from "react-redux";
 import { saveCurrentUser } from "../../actions/userActions";
 
 class PropertyListings extends Component {
@@ -35,10 +35,6 @@ class PropertyListings extends Component {
         .catch(err => console.log(err));
     }
   };
-
-  checkFavorites() {
-    console.log(this.props.currentUser);
-  }
 
   render() {
     if (this.props.error || !this.props.data.results) {
@@ -100,21 +96,6 @@ class PropertyListings extends Component {
             </React.Fragment>
           ))}
         </div>
-        <ul className="pagination">
-          <li className="disabled">
-            <a href="#!">
-              <i className="material-icons">chevron_left</i>
-            </a>
-          </li>
-          <li className="active">
-            <a href="#!">1</a>
-          </li>
-          <li className="waves-effect">
-            <a href="#!">
-              <i className="material-icons">chevron_right</i>
-            </a>
-          </li>
-        </ul>
       </div>
     );
   }
