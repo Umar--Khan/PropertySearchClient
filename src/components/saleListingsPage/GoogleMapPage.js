@@ -35,24 +35,7 @@ export class GoogleMapPage extends Component {
   };
 
   componentDidMount() {
-    var fenway = { lat: 42.345573, lng: -71.098326 };
-    var map = new google.maps.Map(document.getElementById("map"), {
-      center: fenway,
-      zoom: 14
-    });
-    var panorama = new google.maps.StreetViewPanorama(
-      document.getElementById("pano"),
-      {
-        position: fenway,
-        pov: {
-          heading: 34,
-          pitch: 10
-        }
-      }
-    );
-    map.setStreetView(panorama);
-
-    const el = document.querySelectorAll(".tabs");
+    const el = document.querySelectorAll("#tabs-map-view");
     M.Tabs.init(el);
   }
 
@@ -60,25 +43,35 @@ export class GoogleMapPage extends Component {
     const googleMapsApiKey = "AIzaSyAoe5F9tcpX9_AigGhnmKCdQm3qPQLh4zE";
     const streetViewPanoramaOptions = {
       position: { lat: this.props.lat, lng: this.props.lng },
-      pov: { heading: 100, pitch: 0 },
+      pov: { heading: 50, pitch: 1 },
       zoom: 1
     };
     return (
-      <div class="row">
-        <div class="col s12">
-          <ul class="tabs">
-            <li class="tab col s6">
-              <a href="#test1">Map View</a>
-            </li>
-            <li class="tab col s6">
-              <a class="active" href="#test2">
-                Street View
+      <div className="row">
+        <div className="col s12">
+          <ul className="tabs" id="tabs-map-view">
+            <li className="tab col s6">
+              <a href="#test1" className="active">
+                Map View
               </a>
+            </li>
+            <li className="tab col s6">
+              <a href="#test2">Street View</a>
             </li>
           </ul>
         </div>
-        <div id="test1" class="col s12">
-          <div className="container">
+        <div
+          id="test1"
+          className="col s12 center"
+          style={{ marginTop: "3rem" }}
+        >
+          <div
+            style={{
+              width: "800px",
+              height: "450px",
+              backgroundColor: "#eeeeee"
+            }}
+          >
             <Map
               google={this.props.google}
               zoom={14}
@@ -98,7 +91,11 @@ export class GoogleMapPage extends Component {
             </Map>
           </div>
         </div>
-        <div id="test2" class="col s12">
+        <div
+          id="test2"
+          className="col s12 center"
+          style={{ marginTop: "3rem" }}
+        >
           <div
             style={{
               width: "800px",
@@ -118,5 +115,5 @@ export class GoogleMapPage extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: "AIzaSyAoe5F9tcpX9_AigGhnmKCdQm3qPQLh4zE"
+  apiKey: ""
 })(GoogleMapPage);
