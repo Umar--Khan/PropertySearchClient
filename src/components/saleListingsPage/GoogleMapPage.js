@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactStreetview from "react-streetview";
 import M from "materialize-css";
 
 import { Map, GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
@@ -34,11 +35,34 @@ export class GoogleMapPage extends Component {
   };
 
   componentDidMount() {
+    var fenway = { lat: 42.345573, lng: -71.098326 };
+    var map = new google.maps.Map(document.getElementById("map"), {
+      center: fenway,
+      zoom: 14
+    });
+    var panorama = new google.maps.StreetViewPanorama(
+      document.getElementById("pano"),
+      {
+        position: fenway,
+        pov: {
+          heading: 34,
+          pitch: 10
+        }
+      }
+    );
+    map.setStreetView(panorama);
+
     const el = document.querySelectorAll(".tabs");
     M.Tabs.init(el);
   }
 
   render() {
+    const googleMapsApiKey = "AIzaSyAoe5F9tcpX9_AigGhnmKCdQm3qPQLh4zE";
+    const streetViewPanoramaOptions = {
+      position: { lat: this.props.lat, lng: this.props.lng },
+      pov: { heading: 100, pitch: 0 },
+      zoom: 1
+    };
     return (
       <div class="row">
         <div class="col s12">
@@ -75,7 +99,18 @@ export class GoogleMapPage extends Component {
           </div>
         </div>
         <div id="test2" class="col s12">
-          Test 2
+          <div
+            style={{
+              width: "800px",
+              height: "450px",
+              backgroundColor: "#eeeeee"
+            }}
+          >
+            <ReactStreetview
+              apiKey={googleMapsApiKey}
+              streetViewPanoramaOptions={streetViewPanoramaOptions}
+            />
+          </div>
         </div>
       </div>
     );
