@@ -195,18 +195,13 @@ class SearchBar extends Component {
   };
 
   handleMaxNumberChange = e => {
-    const { value } = e.target;
-    this.props.updateMaxResultsNumber(value);
-  };
-
-  checkLength = e => {
     let { value } = e.target;
     if (value > 50) {
       value = 50;
-    }
-    if (value < 1) {
+    } else if (value < 1) {
       value = 1;
     }
+    this.props.updateMaxResultsNumber(value);
   };
 
   render() {
@@ -291,14 +286,14 @@ class SearchBar extends Component {
           <div className="input-field col s2 l2 m2" style={{ margin: "0" }}>
             <i className="material-icons prefix">find_in_page</i>
             <input
-              id="icon_telephone"
+              id="results_per_page"
               type="number"
               className="validate center"
               min="1"
               onChange={this.handleMaxNumberChange}
               max="50"
               value={this.props.maxResultsNumber}
-              onInput={this.checkLength}
+              // onInput={this.checkLength}
             />
           </div>
         </div>

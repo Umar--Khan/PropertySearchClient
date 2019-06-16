@@ -10,6 +10,7 @@ import SignUp from "./components/signInSignOut/SignUp";
 import Account from "./components/Account";
 
 import FavPropertiesList from "./components/AccountPage/FavPropertiesList";
+import SingleProperty from "./components/saleListingsPage/SingleProperty";
 
 import Footer from "./components/Footer";
 
@@ -54,6 +55,11 @@ class App extends Component {
             exact
             path="/property-for-sale/search"
             component={SaleListings}
+          />
+          <Route
+            exact
+            path="/property-for-sale/search/:id"
+            component={SingleProperty}
           />
           <Route exact path="/signin" component={SignIn} />
           <Route exact path="/signup" component={SignUp} />

@@ -13,15 +13,20 @@ class Pagination extends Component {
   };
 
   handleMaxPage = () => {
+    console.log(this.props.maxResultsNumber);
     if (this.props.data) {
-      const max = Math.ceil(this.props.data.count / 20);
+      const max = Math.ceil(
+        this.props.data.count / this.props.maxResultsNumber
+      );
 
       return max;
     }
   };
 
   checkLength = e => {
-    const max = Math.ceil(this.props.data.count / 20);
+    const max = Math.ceil(
+      parseInt(this.props.data.count) / parseInt(this.props.maxResultsNumber)
+    );
 
     if (e.target.value > max) {
       e.target.value = max;
@@ -33,18 +38,20 @@ class Pagination extends Component {
   };
 
   lastPage = () => {
-    const max = Math.ceil(this.props.data.count / 20);
+    const max = Math.ceil(
+      parseInt(this.props.data.count) / parseInt(this.props.maxResultsNumber)
+    );
     this.props.updatePageNumber(`${max}`);
   };
 
   nextPage = () => {
-    let next = this.props.pageNumber++;
-    this.props.updatePageNumber(`${next}`);
+    let next = parseInt(this.props.pageNumber);
+    this.props.updatePageNumber(`${next + 1}`);
   };
 
   previousPage = () => {
-    let previous = this.props.pageNumber - 1;
-    this.props.updatePageNumber(`${previous}`);
+    let previous = parseInt(this.props.pageNumber);
+    this.props.updatePageNumber(`${previous - 1}`);
   };
 
   render() {
@@ -102,7 +109,8 @@ class Pagination extends Component {
 
 const mapStateToProps = state => ({
   data: state.search.data,
-  pageNumber: state.search.pageNumber
+  pageNumber: state.search.pageNumber,
+  maxResultsNumber: state.search.maxResultsNumber
 });
 
 export default connect(
