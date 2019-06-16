@@ -5,7 +5,7 @@ import M from "materialize-css";
 import { Link } from "react-router-dom";
 
 import ImageSlider from "./ImageSlider";
-import GoogleMap from "./GoogleMap";
+import GoogleMap from "./GoogleMapPage";
 
 const singleProperty = {
   image_url:
@@ -238,8 +238,8 @@ class SingleProperty extends Component {
             </div>
             <div id="map" className="col s12">
               <GoogleMap
-                longitude={singleProperty.longitude}
-                latitude={singleProperty.latitude}
+                lng={singleProperty.longitude}
+                lat={singleProperty.latitude}
               />
             </div>
             {/* <div id="test4" className="col s12">
