@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactStreetview from "react-streetview";
 import M from "materialize-css";
+import { googleAPI } from "../../apiKeys";
 
 import { Map, GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
 
@@ -115,5 +116,5 @@ export class GoogleMapPage extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: ""
+  apiKey: googleAPI
 })(GoogleMapPage);

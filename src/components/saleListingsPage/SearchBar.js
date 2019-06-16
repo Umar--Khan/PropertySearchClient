@@ -8,6 +8,7 @@ import {
   updatePageNumber,
   updateMaxResultsNumber
 } from "../../actions/searchActions";
+import { adzunaAPIKey, adzunaAPPKey } from "../../apiKeys";
 
 import M from "materialize-css";
 
@@ -83,7 +84,7 @@ class SearchBar extends Component {
 
     let endpoint = `https://cors-anywhere.herokuapp.com/https://api.adzuna.com:443/v1/api/property/gb/search/${
       this.props.pageNumber
-    }?app_id=68f473fd&app_key=a43e6d17d722879b5b2b82bca088bd4a&results_per_page=${
+    }?app_id=${adzunaAPPKey}&app_key=${adzunaAPIKey}&results_per_page=${
       this.props.maxResultsNumber
     }&${this.runQueries()}&category=for-sale`;
 
