@@ -17,7 +17,7 @@ class SearchBar extends Component {
   state = {
     where: this.props.searchTerm,
     distance: "0.1",
-    price_min: "",
+    price_min: 50000,
     price_max: "",
     beds: "",
     property_type: ""
@@ -92,7 +92,7 @@ class SearchBar extends Component {
       this.props.pageNumber
     }?app_id=${adzunaAPPKey}&app_key=${adzunaAPIKey}&results_per_page=${
       this.props.maxResultsNumber
-    }&${this.runQueries()}&category=for-sale`;
+    }&what_exclude=land&${this.runQueries()}&category=for-sale`;
 
     const headers = {
       "Content-Type": "application/json",

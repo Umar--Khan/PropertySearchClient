@@ -54,7 +54,6 @@ class Pagination extends Component {
   };
 
   render() {
-    console.log(this.props.data.count);
     return (
       <>
         {this.props.data.count !== 0 && this.props.data ? (
