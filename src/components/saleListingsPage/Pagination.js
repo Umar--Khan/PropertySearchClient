@@ -54,9 +54,10 @@ class Pagination extends Component {
   };
 
   render() {
+    console.log(this.props.data.count);
     return (
       <>
-        {this.props.data && (
+        {this.props.data.count !== 0 && this.props.data ? (
           <div className="container center">
             <div className="row center-align">
               <div className="col l2 m2 offset-l1">
@@ -96,6 +97,8 @@ class Pagination extends Component {
               </div>
             </div>
           </div>
+        ) : (
+          <> </>
         )}
       </>
     );

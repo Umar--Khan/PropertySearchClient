@@ -26,7 +26,10 @@ class FavPropertiesList extends Component {
   render() {
     const { properties, searches } = this.props.currentUser;
     return (
-      <div className="container" style={{ minHeight: "35rem" }}>
+      <div
+        className="container"
+        style={{ minHeight: "57rem", marginTop: "3rem" }}
+      >
         {this.props.currentUser && (
           <div className="row">
             <div className="col s12">
@@ -49,13 +52,28 @@ class FavPropertiesList extends Component {
                 {properties.map(prop => (
                   <FavPropertiesCard key={prop.id} property={prop} />
                 ))}
+                {properties.length === 0 && (
+                  <div className="col s12">
+                    <h1 className="center-align" style={{ marginTop: "25rem" }}>
+                      You have no saved properties
+                    </h1>
+                  </div>
+                )}
               </div>
             </div>
             <div id="test2" className="col s12">
-              Test 2
+              {properties.length === 0 && (
+                <div className="col s12">
+                  <h1 className="center-align" style={{ marginTop: "25rem" }}>
+                    You have no saved searches
+                  </h1>
+                </div>
+              )}
             </div>
             <div id="test3" className="col s12">
-              Test 3
+              <div>
+                <h1>{this.props.currentUser.email}</h1>
+              </div>
             </div>
           </div>
         )}

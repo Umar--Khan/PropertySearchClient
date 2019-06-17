@@ -6,9 +6,9 @@ import { googleAPI } from "../../apiKeys";
 import { Map, GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
 
 const mapStyles = {
-  position: "absolute",
-  width: "50%",
-  height: "50%"
+  // position: "absolute",
+  width: "40%",
+  height: "40%"
 };
 
 export class GoogleMapPage extends Component {
@@ -68,9 +68,10 @@ export class GoogleMapPage extends Component {
         >
           <div
             style={{
+              margin: "0 auto",
               width: "800px",
-              height: "450px",
-              backgroundColor: "#eeeeee"
+              height: "450px"
+              //   backgroundColor: "#eeeeee"
             }}
           >
             <Map
@@ -101,7 +102,8 @@ export class GoogleMapPage extends Component {
             style={{
               width: "800px",
               height: "450px",
-              backgroundColor: "#eeeeee"
+              backgroundColor: "#eeeeee",
+              margin: "0 auto"
             }}
           >
             <ReactStreetview

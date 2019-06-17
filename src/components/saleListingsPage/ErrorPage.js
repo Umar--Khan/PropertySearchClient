@@ -8,7 +8,7 @@ class ErrorPage extends Component {
         {this.props.error === "No Search Term" ? (
           <div
             className="container"
-            style={{ minHeight: "25rem", marginTop: "5rem" }}
+            style={{ marginTop: "15rem", minHeight: "35rem" }}
           >
             <div className="col l6 m6 s6">
               <h4 className="center-align">Search Term Required</h4>
@@ -18,7 +18,10 @@ class ErrorPage extends Component {
           <> </>
         )}
         {this.props.error === "Loading" ? (
-          <div className="container" style={{ minHeight: "25rem" }}>
+          <div
+            className="container"
+            style={{ minHeight: "42rem", marginTop: "20rem" }}
+          >
             <div className="col l6 m6 s6">
               <h4 className="center-align">Loading</h4>
               <div className="progress">

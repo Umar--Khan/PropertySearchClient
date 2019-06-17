@@ -5,7 +5,7 @@ class ImageSlider extends Component {
   componentDidMount() {
     const options = { indicators: false };
     const elems = document.querySelectorAll(".slider");
-    let instances = M.Slider.init(elems);
+    M.Slider.init(elems);
   }
   render() {
     console.log(this.props);

@@ -51,7 +51,6 @@ class NavBar extends Component {
                       <i className="material-icons right">person_pin</i>Sign In
                     </Link>
                   )}
-                  }
                 </li>
                 {this.props.currentUser ? (
                   <li onClick={this.signOut}>

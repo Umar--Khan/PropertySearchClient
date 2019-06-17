@@ -57,11 +57,15 @@ class PropertyListings extends Component {
     );
 
     return (
-      <div className="container" style={{ minHeight: "25rem" }}>
-        <div className="row center-align">
+      <div className="container" style={{ minHeight: "35rem" }}>
+        <div className="divider" />
+        <div className="row center-align" style={{ marginTop: "3rem" }}>
           <div className="col l12 s12 m12">
             <div className="col l4 m4 s4">
-              <h6>Properties For Sale in {this.props.searchTerm}</h6>
+              <h6>
+                Properties For Sale in{" "}
+                <span style={semiBoldText}>{this.props.searchTerm}</span>
+              </h6>
             </div>
             <div className="col l4 m4 s4">
               <h5>{count}</h5>
@@ -69,11 +73,18 @@ class PropertyListings extends Component {
             </div>
             <div className="col l4 m4 s4">
               <h6>
-                Page {this.props.pageNumber} of {max}
+                {count >= 1 ? (
+                  <span>
+                    Page {this.props.pageNumber} of {max}
+                  </span>
+                ) : (
+                  <> </>
+                )}
               </h6>
             </div>
           </div>
         </div>
+        <div className="divider" style={{ marginBottom: "3rem" }} />
         <div className="row">
           {results.map(result => (
             <div className="col l12 s12 m12" key={result.id}>
@@ -103,7 +114,12 @@ class PropertyListings extends Component {
                     </p>
                   </div>
                   <div className="card-action">
-                    <Link to={`/property-for-sale/search/${result.id}`}>
+                    <Link
+                      to={`/property-for-sale/search/${result.id}`}
+                      onClick={() => {
+                        this.props.saveSingleProperty(result);
+                      }}
+                    >
                       View More Info
                     </Link>
                   </div>

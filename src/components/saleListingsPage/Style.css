@@ -1,6 +1,12 @@
-@media screen and (max-width: 992px) and (min-width: 600px) {
+/* @media screen and (max-width: 992px) and (min-width: 600px) {
   .input-field.col.l6.m6.s12 {
-    margin-top: 1rem !important;
-    /* background-color: red; */
+    margin-top: 50rem !important;
+    /* background-color: red; 
   }
-}
+} */
+
+/* @media screen and (min-width: 1500px) {
+  .input-field.col.s4.l3.m3:nth-child(2) {
+    margin-top: 27px !important;
+  }
+} */

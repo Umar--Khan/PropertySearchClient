@@ -36,6 +36,17 @@ class SearchBar extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.pageNumber !== this.props.pageNumber) {
+      this.runFetchApi();
+    }
+    if (prevProps.maxResultsNumber !== this.props.maxResultsNumber) {
+      if (this.props.maxResultsNumber) {
+        this.runFetchApi();
+      }
+    }
+  }
+
   handleSelectChange = e => {
     e.preventDefault();
 
@@ -55,6 +66,7 @@ class SearchBar extends Component {
 
   handleGoogleSearchTerm = search => {
     this.setState({ where: search.formatted_address });
+    this.props.saveSearchTerm(search.formatted_address);
   };
 
   runQueries = () => {
@@ -66,17 +78,6 @@ class SearchBar extends Component {
     });
     return values.filter(listItem => listItem !== undefined).join("&");
   };
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.pageNumber !== this.props.pageNumber) {
-      this.runFetchApi();
-    }
-    if (prevProps.maxResultsNumber !== this.props.maxResultsNumber) {
-      if (this.props.maxResultsNumber) {
-        this.runFetchApi();
-      }
-    }
-  }
 
   runFetchApi = () => {
     if (!this.state.where) {
@@ -221,24 +222,8 @@ class SearchBar extends Component {
             <i className="material-icons prefix" onClick={this.runFetchApi}>
               search
             </i>
-            {/* <input
-              type="text"
-              id="autocomplete-input"
-              className="autocomplete"
-              name="where"
-              onChange={this.handleInputChange}
-              onKeyPress={e => {
-                if (e.key === "Enter") {
-                  this.props.saveSearchTerm(e.target.value);
-                  this.props.errorPage("");
-                  this.runFetchApi();
-                }
-              }}
-              defaultValue={this.props.searchTerm}
-              required
-            /> */}
             <Autocomplete
-              style={{ width: "90%" }}
+              style={{ width: "90%", marginTop: "-2rem" }}
               name="where"
               onPlaceSelected={place => {
                 this.handleGoogleSearchTerm(place);
@@ -266,20 +251,20 @@ class SearchBar extends Component {
           <div className="input-field col s4 l3 m3">
             <select
               onChange={this.handleSelectChange}
-              name="price_min"
-              value={this.state.price_min}
+              name="price_max"
+              value={this.state.price_max}
             >
-              <option value="">Min Price</option>
+              <option value="">Max Price</option>
               {this.createPriceOptions()}
             </select>
           </div>
           <div className="input-field col s4 l3 m3">
             <select
               onChange={this.handleSelectChange}
-              name="price_max"
-              value={this.state.price_max}
+              name="price_min"
+              value={this.state.price_min}
             >
-              <option value="">Max Price</option>
+              <option value="">Min Price</option>
               {this.createPriceOptions()}
             </select>
           </div>
@@ -303,8 +288,7 @@ class SearchBar extends Component {
               {this.createPropertyTypeOptions()}
             </select>
           </div>
-          {/* <h6>Results Per Page</h6> */}
-          <div className="input-field col s2 l3 m3">
+          <div className="input-field col s4 l3 m3">
             <i className="material-icons prefix">find_in_page</i>
             <input
               id="results_per_page"
@@ -314,7 +298,6 @@ class SearchBar extends Component {
               onChange={this.handleMaxNumberChange}
               max="50"
               value={this.props.maxResultsNumber}
-              // onInput={this.checkLength}
             />
           </div>
         </div>

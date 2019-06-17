@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import ImageSlider from "./ImageSlider";
 import GoogleMap from "./GoogleMapPage";
 
+import { errorPage } from "../../actions/searchActions";
+
 class SingleProperty extends Component {
   state = {
     urls: ""
@@ -100,9 +102,11 @@ class SingleProperty extends Component {
   }
 
   render() {
-    if (!this.state.urls) {
-      return <h1>loading</h1>;
-    }
+    // if (!this.state.urls) {
+    //   //   return <h1>loading</h1>;
+    //   this.props.errorPage("Loading");
+
+    // }
     const { singleProperty } = this.props;
     return (
       <div className="container" style={{ minHeight: "35rem" }}>
@@ -123,7 +127,23 @@ class SingleProperty extends Component {
         </div>
         <div className="row">
           <div className="col l12 s12 m12">
-            <ImageSlider images={this.state.urls.pictures} />
+            {this.state.urls ? (
+              <ImageSlider images={this.state.urls.pictures} />
+            ) : (
+              <div className="preloader-wrapper big active">
+                <div className="spinner-layer spinner-blue">
+                  <div className="circle-clipper left">
+                    <div className="circle" />
+                  </div>
+                  <div className="gap-patch">
+                    <div className="circle" />
+                  </div>
+                  <div className="circle-clipper right">
+                    <div className="circle" />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <div className="col l8 s12 m8">
@@ -219,10 +239,11 @@ class SingleProperty extends Component {
 }
 
 const mapStateToProps = state => ({
-  singleProperty: state.property.singleProperty
+  singleProperty: state.property.singleProperty,
+  error: state.search.error
 });
 
 export default connect(
   mapStateToProps,
-  null
+  { errorPage }
 )(SingleProperty);
