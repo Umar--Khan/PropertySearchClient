@@ -13,7 +13,6 @@ class Pagination extends Component {
   };
 
   handleMaxPage = () => {
-    console.log(this.props.maxResultsNumber);
     if (this.props.data) {
       const max = Math.ceil(
         this.props.data.count / this.props.maxResultsNumber
@@ -55,9 +54,6 @@ class Pagination extends Component {
   };
 
   render() {
-    if (this.props.data.results) {
-      console.log(this.props.data.results[0]);
-    }
     return (
       <>
         {this.props.data && (
@@ -81,7 +77,6 @@ class Pagination extends Component {
                   type="number"
                   className="validate center"
                   min="1"
-                  //   defaultValue="1"
                   onChange={this.handleChange}
                   max={this.handleMaxPage()}
                   onInput={this.checkLength}
@@ -110,7 +105,8 @@ class Pagination extends Component {
 const mapStateToProps = state => ({
   data: state.search.data,
   pageNumber: state.search.pageNumber,
-  maxResultsNumber: state.search.maxResultsNumber
+  maxResultsNumber: state.search.maxResultsNumber,
+  searchTerm: state.search.searchTerm
 });
 
 export default connect(

@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import Autocomplete from "react-google-autocomplete";
+import { adzunaAPIKey, adzunaAPPKey } from "../../apiKeys";
+import M from "materialize-css";
+import "./Style.css";
 
 import {
   saveApiData,
@@ -8,9 +12,6 @@ import {
   updatePageNumber,
   updateMaxResultsNumber
 } from "../../actions/searchActions";
-import { adzunaAPIKey, adzunaAPPKey } from "../../apiKeys";
-
-import M from "materialize-css";
 
 class SearchBar extends Component {
   state = {
@@ -50,6 +51,10 @@ class SearchBar extends Component {
     const { value, name } = e.target;
 
     this.setState({ [name]: value });
+  };
+
+  handleGoogleSearchTerm = search => {
+    this.setState({ where: search.formatted_address });
   };
 
   runQueries = () => {
@@ -209,11 +214,14 @@ class SearchBar extends Component {
     return (
       <div className="container " style={{ marginTop: "50px" }}>
         <div className="row">
-          <div className="input-field col l4 m3 s12">
+          <div
+            className="input-field col l6 m6 s12"
+            style={{ marginBottom: "0", marginTop: "28px" }}
+          >
             <i className="material-icons prefix" onClick={this.runFetchApi}>
               search
             </i>
-            <input
+            {/* <input
               type="text"
               id="autocomplete-input"
               className="autocomplete"
@@ -228,9 +236,21 @@ class SearchBar extends Component {
               }}
               defaultValue={this.props.searchTerm}
               required
+            /> */}
+            <Autocomplete
+              style={{ width: "90%" }}
+              name="where"
+              onPlaceSelected={place => {
+                this.handleGoogleSearchTerm(place);
+                this.props.errorPage("");
+                this.runFetchApi();
+              }}
+              defaultValue={this.props.searchTerm}
+              types={["(regions)"]}
+              componentRestrictions={{ country: "gb" }}
             />
           </div>
-          <div className="input-field col s4 l2 m2">
+          <div className="input-field col s4 l3 m3">
             <select
               onChange={this.handleSelectChange}
               name="distance"
@@ -243,7 +263,7 @@ class SearchBar extends Component {
               {this.createMileOptions()}
             </select>
           </div>
-          <div className="input-field col s4 l2 m2">
+          <div className="input-field col s4 l3 m3">
             <select
               onChange={this.handleSelectChange}
               name="price_min"
@@ -253,7 +273,7 @@ class SearchBar extends Component {
               {this.createPriceOptions()}
             </select>
           </div>
-          <div className="input-field col s4 l2 m2">
+          <div className="input-field col s4 l3 m3">
             <select
               onChange={this.handleSelectChange}
               name="price_max"
@@ -263,7 +283,7 @@ class SearchBar extends Component {
               {this.createPriceOptions()}
             </select>
           </div>
-          <div className="input-field col s4 l2 m2">
+          <div className="input-field col s4 l3 m3">
             <select
               onChange={this.handleSelectChange}
               name="beds"
@@ -273,7 +293,7 @@ class SearchBar extends Component {
               {this.createBedOptions()}
             </select>
           </div>
-          <div className="input-field col s4 l2 m2">
+          <div className="input-field col s4 l3 m3">
             <select
               onChange={this.handleSelectChange}
               name="property_type"
@@ -283,8 +303,8 @@ class SearchBar extends Component {
               {this.createPropertyTypeOptions()}
             </select>
           </div>
-          <h6>Results Per Page</h6>
-          <div className="input-field col s2 l2 m2" style={{ margin: "0" }}>
+          {/* <h6>Results Per Page</h6> */}
+          <div className="input-field col s2 l3 m3">
             <i className="material-icons prefix">find_in_page</i>
             <input
               id="results_per_page"

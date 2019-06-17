@@ -61,9 +61,7 @@ class PropertyListings extends Component {
         <div className="row center-align">
           <div className="col l12 s12 m12">
             <div className="col l4 m4 s4">
-              <h6>
-                Properties For Sale in {this.props.searchTerm.toUpperCase()}
-              </h6>
+              <h6>Properties For Sale in {this.props.searchTerm}</h6>
             </div>
             <div className="col l4 m4 s4">
               <h5>{count}</h5>

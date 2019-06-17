@@ -61,51 +61,79 @@ class SignUp extends Component {
   render() {
     return (
       <div className="container">
-        <div className="col s12">
-          <h4 className="center">Sign Up</h4>
-        </div>
-        <div className="col s8 offset-s2">
-          <form className="col s12" onSubmit={this.updateUser}>
-            <div className="input-field col s12">
-              <input
-                id="email_inline"
-                type="email"
-                className="validate"
-                onChange={this.handleOnChange}
-              />
-              <label htmlFor="email_inline">Email</label>
-              <span
-                className="helper-text"
-                data-error={this.state.errors}
-                data-success="Correct"
-              />
-            </div>
-
-            <div className="input-field col s12">
-              <input
-                id="password"
-                type="password"
-                className="validate"
-                onChange={this.handleOnChange}
-              />
-              <label htmlFor="password">Password</label>
-            </div>
-            <button
-              type="submit"
-              className="waves-effect waves-light btn"
-              id="create_account"
-            >
-              Sign Up
-            </button>
-          </form>
-          <Link to={"/signup"}>
-            <button
-              className="waves-effect waves-light btn"
-              id="already_account"
-            >
-              Already Have A Account?
-            </button>
-          </Link>
+        <div className="row">
+          <div className="col s12">
+            <h4 className="center">Sign Up</h4>
+          </div>
+          <div className="col s8 offset-s2">
+            <form className="col s12" onSubmit={this.updateUser}>
+              <div className="input-field col s12">
+                <input
+                  id="firstname"
+                  type="text"
+                  name="firstname"
+                  onChange={this.handleOnChange}
+                />
+                <label htmlFor="firstname">Firstname</label>
+              </div>
+              <div className="input-field col s12">
+                <input
+                  id="lastname"
+                  type="text"
+                  name="lastname"
+                  onChange={this.handleOnChange}
+                />
+                <label htmlFor="lastname">Lastname</label>
+              </div>
+              <div className="input-field col s12">
+                <input
+                  id="email_inline"
+                  type="email"
+                  className="validate"
+                  onChange={this.handleOnChange}
+                />
+                <label htmlFor="email_inline">Email</label>
+                <span
+                  className="helper-text"
+                  data-error={this.state.errors}
+                  data-success="Correct"
+                />
+              </div>
+              <div className="input-field col s12">
+                <input
+                  id="password"
+                  type="password"
+                  className="validate"
+                  onChange={this.handleOnChange}
+                />
+                <label htmlFor="password">Password</label>
+              </div>
+              <div className="input-field col s12">
+                <input
+                  id="postcode"
+                  type="text"
+                  name="postcode"
+                  onChange={this.handleOnChange}
+                />
+                <label htmlFor="postcode">Postcode (optional)</label>
+              </div>
+              <button
+                type="submit"
+                className="waves-effect waves-light btn"
+                id="create_account"
+              >
+                Sign Up
+              </button>
+            </form>
+            <Link to={"/signup"}>
+              <button
+                className="waves-effect waves-light btn"
+                id="already_account"
+              >
+                Already Have A Account?
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     );

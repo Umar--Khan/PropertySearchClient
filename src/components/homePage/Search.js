@@ -1,18 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import Autocomplete from "react-google-autocomplete";
 
 import { connect } from "react-redux";
 import { saveSearchTerm } from "../../actions/searchActions";
 
-import M from "materialize-css";
-
 class Search extends Component {
   state = {
     searchTerm: ""
-  };
-
-  handleSearchTerm = e => {
-    this.setState({ searchTerm: e.target.value });
   };
 
   handleOnClick = e => {
@@ -23,13 +18,9 @@ class Search extends Component {
     }
   };
 
-  componentDidMount() {
-    // const options = {
-    //   data: { Test: null }
-    // };
-    const elems = document.querySelectorAll(".autocomplete");
-    return M.Autocomplete.init(elems);
-  }
+  handleGoogleSearchTerm = search => {
+    this.setState({ searchTerm: search.formatted_address });
+  };
 
   render() {
     return (
@@ -42,15 +33,17 @@ class Search extends Component {
         <div className="row">
           <div className="input-field col l12 m9 s12">
             <i className="material-icons prefix">search</i>
-            <input
-              type="text"
-              id="autocomplete-input"
-              className="autocomplete"
-              onChange={this.handleSearchTerm}
+            <Autocomplete
+              style={{ width: "90%" }}
+              onPlaceSelected={place => {
+                this.handleGoogleSearchTerm(place);
+              }}
+              types={["(regions)"]}
+              componentRestrictions={{ country: "gb" }}
             />
-            <label htmlFor="autocomplete-input">
+            {/* <label htmlFor="autocomplete-input">
               e.g. 'York', 'NW3 5TY' or 'Waterloo Station'
-            </label>
+            </label> */}
           </div>
           <div className="col l6 m6 s6">
             <Link to={"/property-for-rent/search"}>

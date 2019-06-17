@@ -71,7 +71,6 @@ class SearchBar extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log("Fetched");
         this.props.saveApiData(data);
         if (this.props.errorPage) {
           this.props.errorPage(false);
