@@ -115,7 +115,7 @@ class SingleProperty extends Component {
               <div className="col l12 s12 m12">
                 <h5>
                   {singleProperty.title === "studio"
-                    ? "Studio flat to rent"
+                    ? `Studio Flat ${singleProperty.category.label}`
                     : `${singleProperty.title}`}
                 </h5>
                 <h4 className="right-align teal-text text-lighten-2">

@@ -14,7 +14,10 @@ class OurServices extends Component {
               <p style={promoTextStyle}>Call our 24/7 helpline</p>
               <p className="light center">
                 We provide all sort of help from your mortgage, to what property
-                would best suit your needs
+                would best suit your needs. Our highly motivated teams will make
+                sure that they find you the perfect property to meet your
+                requirements, as well as providing you with all the services you
+                will need when purchasing.
               </p>
             </div>
           </div>
@@ -26,7 +29,9 @@ class OurServices extends Component {
               <p style={promoTextStyle}>Save your favorite properties</p>
               <p className="light center">
                 Login to save your favorite properties and let us recommend
-                similar properties.
+                similar properties. Utilising the best professional marketing
+                services possible, our expert negotiators will help you with a
+                quick, hassle free sale.
               </p>
             </div>
           </div>
@@ -38,7 +43,9 @@ class OurServices extends Component {
               <p style={promoTextStyle}>Sell your property</p>
               <p className="light center">
                 Our services are one of the best in the UK. We will handle
-                everything for you.
+                everything for you. Utilising the best professional marketing
+                services possible, our expert negotiators will help you with a
+                quick, hassle free sale.
               </p>
             </div>
           </div>

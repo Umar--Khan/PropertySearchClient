@@ -72,13 +72,6 @@ class FavPropertiesCard extends Component {
       <div className="col l12 s12 m12">
         <div className="card horizontal card small card-panel hoverable">
           <div className="card-image">
-            <a
-              className="btn-floating halfway-fab waves-effect waves-light red"
-              onClick={() => this.unFavoriteProperty(prop)}
-              href="#!"
-            >
-              <i className="material-icons">delete</i>
-            </a>
             <Link
               to={
                 prop.sale_price
@@ -129,6 +122,14 @@ class FavPropertiesCard extends Component {
                 ? `£${this.numberWithCommas(prop.price_per_month)} pcm`
                 : `£${this.numberWithCommas(prop.sale_price)}`}
             </h4>
+            <a
+              className="btn-floating btn-large scale-transition blue darken-3"
+              onClick={() => this.unFavoriteProperty(prop)}
+              href="#!"
+              style={{ marginLeft: "3rem" }}
+            >
+              <i className="material-icons">delete</i>
+            </a>
           </div>
         </div>
       </div>

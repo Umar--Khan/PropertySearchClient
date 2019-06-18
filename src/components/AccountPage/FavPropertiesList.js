@@ -54,9 +54,9 @@ class FavPropertiesList extends Component {
                 ))}
                 {properties.length === 0 && (
                   <div className="col s12">
-                    <h1 className="center-align" style={{ marginTop: "25rem" }}>
+                    <h3 className="center-align" style={{ marginTop: "20rem" }}>
                       You have no saved properties
-                    </h1>
+                    </h3>
                   </div>
                 )}
               </div>
@@ -64,9 +64,9 @@ class FavPropertiesList extends Component {
             <div id="test2" className="col s12">
               {properties.length === 0 && (
                 <div className="col s12">
-                  <h1 className="center-align" style={{ marginTop: "25rem" }}>
+                  <h3 className="center-align" style={{ marginTop: "20rem" }}>
                     You have no saved searches
-                  </h1>
+                  </h3>
                 </div>
               )}
             </div>
@@ -81,8 +81,7 @@ class FavPropertiesList extends Component {
     );
   }
 }
-const boldText = { fontSize: "1.7rem", fontWeight: "500" };
-const semiBoldText = { fontSize: "1.5rem", fontWeight: "400" };
+const semiBoldText = { fontSize: "1rem", fontWeight: "500" };
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser

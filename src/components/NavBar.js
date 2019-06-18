@@ -42,6 +42,15 @@ class NavBar extends Component {
                   <Link to={"/property-for-sale/search"}>Buy</Link>
                 </li>
                 <li>
+                  <Link to={"/property-for-sale/search"}>New Homes</Link>
+                </li>
+                <li>
+                  <Link to={"/property-for-sale/search"}>Commercial</Link>
+                </li>
+                <li>
+                  <Link to={"/property-for-sale/search"}>Find Agents</Link>
+                </li>
+                <li>
                   {this.props.currentUser ? (
                     <Link to={"/account"}>
                       <i className="material-icons right">face</i>
@@ -73,6 +82,15 @@ class NavBar extends Component {
           </li>
           <li>
             <Link to={"/property-for-sale/search"}>Buy</Link>
+          </li>
+          <li>
+            <Link to={"/property-for-sale/search"}>New Homes</Link>
+          </li>
+          <li>
+            <Link to={"/property-for-sale/search"}>Commercial</Link>
+          </li>
+          <li>
+            <Link to={"/property-for-sale/search"}>Find Agents</Link>
           </li>
           <li>
             {this.props.currentUser ? (
