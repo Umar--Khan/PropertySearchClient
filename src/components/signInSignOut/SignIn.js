@@ -129,10 +129,7 @@ class SignIn extends Component {
             </div>
             <div className="center">
               <Link to={"/signup"}>
-                <button
-                  className="waves-effect waves-light btn"
-                  id="already_account"
-                >
+                <button className="waves-effect waves-light btn">
                   Create a Account
                 </button>
               </Link>

@@ -10,13 +10,16 @@ class SignUp extends Component {
   state = {
     email: "",
     password: "",
+    postcode: "",
+    firstname: "",
+    lastname: "",
     errors: "Invalid Email"
   };
 
   handleOnChange = e => {
-    const { value, type } = e.target;
+    const { value, name } = e.target;
 
-    this.setState({ [type]: value });
+    this.setState({ [name]: value });
   };
 
   updateUser = e => {
@@ -24,11 +27,14 @@ class SignUp extends Component {
 
     const email = this.state.email;
     const password = this.state.password;
+    const firstname = this.state.firstname;
+    const lastname = this.state.lastname;
+    const postcode = this.state.postcode;
 
-    this.createUser(email, password);
+    this.createUser(email, password, firstname, lastname, postcode);
   };
 
-  createUser = (email, password) => {
+  createUser = (email, password, firstname, lastname, postcode) => {
     const apiUrl = "http://localhost:3001/api";
 
     return fetch(apiUrl + "/users", {
@@ -38,7 +44,13 @@ class SignUp extends Component {
         "X-Requested-With": "XMLHttpRequest"
       },
       body: JSON.stringify({
-        user: { email: email, password: password }
+        user: {
+          email: email,
+          password: password,
+          firstname: firstname,
+          lastname: lastname,
+          postcode: postcode
+        }
       })
     })
       .then(resp => resp.json())
@@ -60,12 +72,13 @@ class SignUp extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div
+        className="container"
+        style={{ marginTop: "5rem", marginBottom: "5rem" }}
+      >
         <div className="row">
-          <div className="col s12">
+          <div className="col l6 s12 m6">
             <h4 className="center">Sign Up</h4>
-          </div>
-          <div className="col s8 offset-s2">
             <form className="col s12" onSubmit={this.updateUser}>
               <div className="input-field col s12">
                 <input
@@ -73,6 +86,7 @@ class SignUp extends Component {
                   type="text"
                   name="firstname"
                   onChange={this.handleOnChange}
+                  required
                 />
                 <label htmlFor="firstname">Firstname</label>
               </div>
@@ -82,15 +96,21 @@ class SignUp extends Component {
                   type="text"
                   name="lastname"
                   onChange={this.handleOnChange}
+                  required
                 />
                 <label htmlFor="lastname">Lastname</label>
               </div>
-              <div className="input-field col s12">
+              <div
+                className="input-field col s12"
+                style={{ marginBottom: "0rem" }}
+              >
                 <input
                   id="email_inline"
                   type="email"
+                  name="email"
                   className="validate"
                   onChange={this.handleOnChange}
+                  required
                 />
                 <label htmlFor="email_inline">Email</label>
                 <span
@@ -103,6 +123,7 @@ class SignUp extends Component {
                 <input
                   id="password"
                   type="password"
+                  name="password"
                   className="validate"
                   onChange={this.handleOnChange}
                 />
@@ -117,22 +138,43 @@ class SignUp extends Component {
                 />
                 <label htmlFor="postcode">Postcode (optional)</label>
               </div>
-              <button
-                type="submit"
-                className="waves-effect waves-light btn"
-                id="create_account"
-              >
-                Sign Up
-              </button>
+              <div className="center">
+                <button
+                  type="submit"
+                  className="waves-effect waves-light btn"
+                  id="create_account"
+                  style={{ marginTop: "1rem" }}
+                >
+                  Create a Account
+                </button>
+              </div>
             </form>
-            <Link to={"/signup"}>
-              <button
-                className="waves-effect waves-light btn"
-                id="already_account"
-              >
-                Already Have A Account?
-              </button>
-            </Link>
+          </div>
+
+          <div className="col l6 s12 m6">
+            <div className="center" style={{ marginTop: "10rem" }}>
+              <h5 style={{ minHeight: "3rem" }}>With a account you can:</h5>
+              <ul>
+                <li style={{ minHeight: "3rem" }}>
+                  <i className="material-icons">save</i> Save Properties
+                </li>
+                <li style={{ minHeight: "3rem" }}>
+                  <i className="material-icons">search</i>Create & save your own
+                  search areas
+                </li>
+                <li style={{ minHeight: "3rem" }}>
+                  <i className="material-icons">bubble_chart</i>Let us recommend
+                  you some properties
+                </li>
+              </ul>
+            </div>
+            <div className="center">
+              <Link to={"/signin"}>
+                <button className="waves-light btn">
+                  Already Have A Account?
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

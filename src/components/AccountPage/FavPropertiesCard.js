@@ -7,6 +7,14 @@ import { saveCurrentUser } from "../../actions/userActions";
 import { saveSingleProperty } from "../../actions/propertyActions";
 
 class FavPropertiesCard extends Component {
+  componentDidMount() {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      this.getUser();
+    }
+  }
+
   numberWithCommas = x => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };

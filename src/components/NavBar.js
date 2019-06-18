@@ -19,6 +19,7 @@ class NavBar extends Component {
   signOut = () => {
     this.props.saveCurrentUser("");
     localStorage.removeItem("token");
+    this.props.history.push("/");
   };
 
   render() {
