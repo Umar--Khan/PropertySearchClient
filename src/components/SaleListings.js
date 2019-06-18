@@ -9,7 +9,7 @@ class Listings extends Component {
     return (
       <>
         <SearchBar />
-        <PropertyListings />
+        <PropertyListings {...this.props} />
         <Pagination />
       </>
     );

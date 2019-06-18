@@ -119,14 +119,20 @@ class PropertyCards extends Component {
   };
 
   render() {
-    const { result } = this.props;
+    const { result, match } = this.props;
 
     return (
       <div>
         <div className="col l12 s12 m12" key={result.id}>
           <div className="card horizontal card small card-panel hoverable">
             <div className="card-image">
-              <Link to={`/property-for-sale/search/${result.id}`}>
+              <Link
+                to={
+                  match.url === "/property-for-rent/search"
+                    ? `/property-for-rent/search/${result.id}`
+                    : `/property-for-sale/search/${result.id}`
+                }
+              >
                 <img
                   src={result.image_url}
                   alt="thumbnail"
@@ -161,7 +167,12 @@ class PropertyCards extends Component {
               </div>
             </div>
             <div className="valign-wrapper">
-              <h4>£{this.numberWithCommas(result.sale_price)}</h4>
+              {result.sale_price ? (
+                <h4>£{this.numberWithCommas(result.sale_price)}</h4>
+              ) : (
+                <h4>£{this.numberWithCommas(result.price_per_month)} pcm</h4>
+              )}
+
               {this.state.clicked ? (
                 <a
                   className="btn-floating btn-large scale-transition blue darken-3"

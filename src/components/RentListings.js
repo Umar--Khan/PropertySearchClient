@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import SearchBar from "./rentListingsPage/SearchBar";
-import PropertyListings from "./rentListingsPage/PropertyListings";
+import PropertyListings from "./saleListingsPage/PropertyListings";
 import Pagination from "./saleListingsPage/Pagination";
 
 class Listings extends Component {
@@ -9,7 +9,7 @@ class Listings extends Component {
     return (
       <>
         <SearchBar />
-        <PropertyListings />
+        <PropertyListings {...this.props} />
         <Pagination />
       </>
     );

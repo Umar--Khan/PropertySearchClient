@@ -44,7 +44,7 @@ class PropertyListings extends Component {
         <div className="divider" style={{ marginBottom: "3rem" }} />
         <div className="row">
           {results.map(result => (
-            <PropertyCards result={result} key={result.id} />
+            <PropertyCards result={result} key={result.id} {...this.props} />
           ))}
         </div>
       </div>
