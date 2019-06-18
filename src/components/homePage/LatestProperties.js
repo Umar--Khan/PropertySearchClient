@@ -2,16 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
-import Slide1 from "../../img/property-1.jpg";
-import Slide2 from "../../img/property-2.jpg";
-import Slide4 from "../../img/property-4.jpg";
-import Slide5 from "../../img/property-5.jpg";
-import Slide6 from "../../img/property-6.jpg";
-import Slide7 from "../../img/property-7.jpg";
-import Slide8 from "../../img/property-8.jpg";
-import Slide9 from "../../img/property-9.jpg";
-import Slide10 from "../../img/property-10.jpg";
-
 import { saveSingleProperty } from "../../actions/propertyActions";
 import { adzunaAPIKey, adzunaAPPKey } from "../../apiKeys";
 
@@ -57,26 +47,6 @@ class LatestProperties extends Component {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-  slideselector = () => {
-    const randomPics = [
-      Slide1,
-      Slide2,
-      Slide4,
-      Slide5,
-      Slide6,
-      Slide7,
-      Slide8,
-      Slide9,
-      Slide10
-    ];
-
-    return randomPics
-      .sort(function() {
-        return 0.5 - Math.random();
-      })
-      .pop();
-  };
-
   render() {
     return (
       <div className="container" style={{ marginBottom: "40px" }}>
@@ -106,19 +76,11 @@ class LatestProperties extends Component {
               <div className="col l4" key={property.id}>
                 <div className="card">
                   <div className="card-image waves-effect waves-block waves-light">
-                    {this.state.property ? (
-                      <img
-                        className="activator"
-                        src={property.image_url}
-                        alt="test"
-                      />
-                    ) : (
-                      <img
-                        className="activator"
-                        src={this.slideselector()}
-                        alt="test"
-                      />
-                    )}
+                    <img
+                      className="activator"
+                      src={property.image_url}
+                      alt="test"
+                    />
                   </div>
                   <div className="card-content">
                     <span className="card-title activator grey-text text-darken-4 center">

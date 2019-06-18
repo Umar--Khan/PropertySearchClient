@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-
 import { Link } from "react-router-dom";
-
 import { connect } from "react-redux";
+import Autocomplete from "react-google-autocomplete";
 
 import { saveCurrentUser } from "../../actions/userActions";
 
@@ -70,6 +69,10 @@ class SignUp extends Component {
       });
   };
 
+  handleGoogleSearchTerm = search => {
+    this.setState({ postcode: search.formatted_address });
+  };
+
   render() {
     return (
       <div
@@ -130,13 +133,14 @@ class SignUp extends Component {
                 <label htmlFor="password">Password</label>
               </div>
               <div className="input-field col s12">
-                <input
-                  id="postcode"
-                  type="text"
-                  name="postcode"
-                  onChange={this.handleOnChange}
+                <Autocomplete
+                  style={{ width: "100%" }}
+                  onPlaceSelected={place => {
+                    this.handleGoogleSearchTerm(place);
+                  }}
+                  types={["(regions)"]}
+                  componentRestrictions={{ country: "gb" }}
                 />
-                <label htmlFor="postcode">Postcode (optional)</label>
               </div>
               <div className="center">
                 <button

@@ -34,7 +34,7 @@ class Search extends Component {
           <div className="input-field col l12 m9 s12">
             <i className="material-icons prefix">search</i>
             <Autocomplete
-              style={{ width: "90%" }}
+              style={{ width: "95%" }}
               onPlaceSelected={place => {
                 this.handleGoogleSearchTerm(place);
               }}
