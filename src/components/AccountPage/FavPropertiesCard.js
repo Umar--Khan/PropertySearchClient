@@ -1,11 +1,36 @@
 import React, { Component } from "react";
 import _ from "lodash";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+
 import { saveCurrentUser } from "../../actions/userActions";
+import { saveSingleProperty } from "../../actions/propertyActions";
 
 class FavPropertiesCard extends Component {
   numberWithCommas = x => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
+  getUser = () => {
+    const apiUrl = "http://localhost:3001/api";
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      return fetch(apiUrl + "/user", {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          Authorization: `Token ${token}`
+        }
+      })
+        .then(resp => resp.json())
+        .then(data => {
+          if (data.user) {
+            this.props.saveCurrentUser(data.user);
+          }
+        })
+        .catch(err => console.log(err));
+    }
   };
 
   unFavoriteProperty = property => {
@@ -15,18 +40,21 @@ class FavPropertiesCard extends Component {
     const userId = this.props.currentUser._id;
 
     if (token) {
-      return fetch(apiUrl + `/${userId}/favorite`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Requested-With": "XMLHttpRequest",
-          Authorization: `Token ${token}`
-        },
-        body: JSON.stringify({ property: property })
-      })
-        .then(resp => resp.json())
-        .then(data => this.props.saveCurrentUser(data.user))
-        .catch(err => console.log(err));
+      return (
+        fetch(apiUrl + `/${userId}/favorite`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+            Authorization: `Token ${token}`
+          },
+          body: JSON.stringify({ property: property })
+        })
+          .then(resp => resp.json())
+          // .then(resp => console.log(resp))
+          .then(resp => this.getUser())
+          .catch(err => console.log(err))
+      );
     }
   };
 
@@ -43,7 +71,21 @@ class FavPropertiesCard extends Component {
             >
               <i className="material-icons">delete</i>
             </a>
-            <img src={prop.image_url} alt="thumbnail" />
+            <Link
+              to={
+                prop.sale_price
+                  ? `/property-for-sale/search/${prop.id}`
+                  : `/property-for-rent/search/${prop.id}`
+              }
+            >
+              <img
+                src={prop.image_url}
+                alt="thumbnail"
+                onClick={() => {
+                  this.props.saveSingleProperty(prop);
+                }}
+              />
+            </Link>
           </div>
           <div className="card-stacked">
             <div className="card-content">
@@ -59,11 +101,26 @@ class FavPropertiesCard extends Component {
               </p>
             </div>
             <div className="card-action">
-              <a href="#">View More Info</a>
+              <Link
+                to={
+                  prop.sale_price
+                    ? `/property-for-sale/search/${prop.id}`
+                    : `/property-for-rent/search/${prop.id}`
+                }
+                onClick={() => {
+                  this.props.saveSingleProperty(prop);
+                }}
+              >
+                View More Info
+              </Link>
             </div>
           </div>
           <div className="valign-wrapper">
-            <h4>£{this.numberWithCommas(prop.sale_price)}</h4>
+            <h4>
+              {prop.price_per_month
+                ? `£${this.numberWithCommas(prop.price_per_month)} pcm`
+                : `£${this.numberWithCommas(prop.sale_price)}`}
+            </h4>
           </div>
         </div>
       </div>
@@ -80,5 +137,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { saveCurrentUser }
+  { saveCurrentUser, saveSingleProperty }
 )(FavPropertiesCard);

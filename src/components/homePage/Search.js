@@ -41,9 +41,6 @@ class Search extends Component {
               types={["(regions)"]}
               componentRestrictions={{ country: "gb" }}
             />
-            {/* <label htmlFor="autocomplete-input">
-              e.g. 'York', 'NW3 5TY' or 'Waterloo Station'
-            </label> */}
           </div>
           <div className="col l6 m6 s6">
             <Link to={"/property-for-rent/search"}>

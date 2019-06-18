@@ -35,7 +35,7 @@ class NavBar extends Component {
               </a>
               <ul className="right hide-on-med-and-down">
                 <li>
-                  <Link to={"/property-to-rent/search"}>Rent</Link>
+                  <Link to={"/property-for-rent/search"}>Rent</Link>
                 </li>
                 <li>
                   <Link to={"/property-for-sale/search"}>Buy</Link>
@@ -68,7 +68,7 @@ class NavBar extends Component {
         </nav>
         <ul className="sidenav" id="mobile-demo">
           <li>
-            <Link to={"/property-to-rent/search"}>Rent</Link>
+            <Link to={"/property-for-rent/search"}>Rent</Link>
           </li>
           <li>
             <Link to={"/property-for-sale/search"}>Buy</Link>

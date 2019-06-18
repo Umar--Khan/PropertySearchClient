@@ -4,7 +4,7 @@ import _ from "lodash";
 import { Link } from "react-router-dom";
 import M from "materialize-css";
 
-import ErrorPage from "./ErrorPage";
+import ErrorPage from "../saleListingsPage/ErrorPage";
 
 import { saveCurrentUser } from "../../actions/userActions";
 import { saveSingleProperty } from "../../actions/propertyActions";
@@ -45,6 +45,14 @@ class PropertyListings extends Component {
     }
   };
 
+  generateRent = () => {
+    let min = 1500;
+    let max = 2500;
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
   render() {
     if (this.props.error || !this.props.data.results) {
       return <ErrorPage />;
@@ -62,7 +70,7 @@ class PropertyListings extends Component {
         <div className="row center-align" style={{ marginTop: "3rem" }}>
           <div className="col l12 s12 m12">
             <div className="col l4 m4 s4">
-              <h6>Properties For Sale in {this.props.searchTerm}</h6>
+              <h6>Properties For Rent in {this.props.searchTerm}</h6>
             </div>
             <div className="col l4 m4 s4">
               <h5>{count}</h5>
@@ -83,58 +91,66 @@ class PropertyListings extends Component {
         </div>
         <div className="divider" style={{ marginBottom: "3rem" }} />
         <div className="row">
-          {results.map(result => (
-            <div className="col l12 s12 m12" key={result.id}>
-              <div className="card horizontal card small card-panel hoverable">
-                <div className="card-image">
-                  <Link to={`/property-for-sale/search/${result.id}`}>
-                    <img
-                      src={result.image_url}
-                      alt="thumbnail"
-                      onClick={() => {
-                        this.props.saveSingleProperty(result);
-                      }}
-                    />
-                  </Link>
-                </div>
-                <div className="card-stacked">
-                  <div className="card-content">
-                    <h5>
-                      {result.beds} bedroom {_.lowerCase(result.property_type)}{" "}
-                      {_.lowerCase(result.category.label)}
-                    </h5>
-                    <h6 style={semiBoldText}>{result.location.display_name}</h6>
-                    <p>
-                      {_.truncate(result.description, {
-                        length: 175
-                      })}
-                    </p>
+          {results.map(
+            result =>
+              result.price_per_month && (
+                <div className="col l12 s12 m12" key={result.id}>
+                  <div className="card horizontal card small card-panel hoverable">
+                    <div className="card-image">
+                      <Link to={`/property-for-rent/search/${result.id}`}>
+                        <img
+                          src={result.image_url}
+                          alt="thumbnail"
+                          onClick={() => {
+                            this.props.saveSingleProperty(result);
+                          }}
+                        />
+                      </Link>
+                    </div>
+                    <div className="card-stacked">
+                      <div className="card-content">
+                        <h5>
+                          {result.beds ? `${result.beds} bedroom ` : "Studio "}
+                          {_.lowerCase(result.property_type)}{" "}
+                          {_.lowerCase(result.category.label)}
+                        </h5>
+                        <h6 style={semiBoldText}>
+                          {result.location.display_name}
+                        </h6>
+                        <p>
+                          {_.truncate(result.description, {
+                            length: 175
+                          })}
+                        </p>
+                      </div>
+                      <div className="card-action">
+                        <Link
+                          to={`/property-for-rent/search/${result.id}`}
+                          onClick={() => {
+                            this.props.saveSingleProperty(result);
+                          }}
+                        >
+                          View More Info
+                        </Link>
+                      </div>
+                    </div>
+                    <div className="valign-wrapper">
+                      <h4>
+                        £{this.numberWithCommas(result.price_per_month)} pcm
+                      </h4>
+                      <a
+                        className="btn-floating red"
+                        onClick={e => this.favoriteProperty(result, e)}
+                        href="#"
+                        style={{ marginLeft: "3rem" }}
+                      >
+                        <i className="material-icons">favorite_border</i>
+                      </a>
+                    </div>
                   </div>
-                  <div className="card-action">
-                    <Link
-                      to={`/property-for-sale/search/${result.id}`}
-                      onClick={() => {
-                        this.props.saveSingleProperty(result);
-                      }}
-                    >
-                      View More Info
-                    </Link>
-                  </div>
                 </div>
-                <div className="valign-wrapper">
-                  <h4>£{this.numberWithCommas(result.sale_price)}</h4>
-                  <a
-                    className="btn-floating red"
-                    onClick={e => this.favoriteProperty(result, e)}
-                    href="#"
-                    style={{ marginLeft: "3rem" }}
-                  >
-                    <i className="material-icons">favorite_border</i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))}
+              )
+          )}
         </div>
       </div>
     );

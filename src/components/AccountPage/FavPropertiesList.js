@@ -18,7 +18,7 @@ class FavPropertiesList extends Component {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevState, prevProps) {
     const el = document.querySelectorAll(".tabs");
     M.Tabs.init(el);
   }

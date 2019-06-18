@@ -1,14 +1,17 @@
 import React, { Component } from "react";
-
 import { connect } from "react-redux";
+import Autocomplete from "react-google-autocomplete";
+import { adzunaAPIKey, adzunaAPPKey } from "../../apiKeys";
+import M from "materialize-css";
+// import "./Style.css";
 
 import {
   saveApiData,
   saveSearchTerm,
-  errorPage
+  errorPage,
+  updatePageNumber,
+  updateMaxResultsNumber
 } from "../../actions/searchActions";
-
-import M from "materialize-css";
 
 class SearchBar extends Component {
   state = {
@@ -26,6 +29,21 @@ class SearchBar extends Component {
 
     if (this.state.where) {
       this.runFetchApi();
+    }
+
+    if (!this.state.where) {
+      this.props.errorPage("No Search Term");
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.pageNumber !== this.props.pageNumber) {
+      this.runFetchApi();
+    }
+    if (prevProps.maxResultsNumber !== this.props.maxResultsNumber) {
+      if (this.props.maxResultsNumber) {
+        this.runFetchApi();
+      }
     }
   }
 
@@ -46,6 +64,11 @@ class SearchBar extends Component {
     this.setState({ [name]: value });
   };
 
+  handleGoogleSearchTerm = search => {
+    this.setState({ where: search.formatted_address });
+    this.props.saveSearchTerm(search.formatted_address);
+  };
+
   runQueries = () => {
     const arrKeys = Object.keys(this.state);
     const values = arrKeys.map(item => {
@@ -57,20 +80,31 @@ class SearchBar extends Component {
   };
 
   runFetchApi = () => {
-    let endpoint = `https://cors-anywhere.herokuapp.com/https://api.adzuna.com:443/v1/api/property/gb/search/1?app_id=68f473fd&app_key=a43e6d17d722879b5b2b82bca088bd4a&results_per_page=5&${this.runQueries()}&category=for-sale`;
+    if (!this.state.where) {
+      this.props.errorPage("No Search Term");
+      this.props.saveApiData("");
+      return;
+    }
+
+    this.props.errorPage("Loading");
+
+    let endpoint = `https://cors-anywhere.herokuapp.com/https://api.adzuna.com:443/v1/api/property/gb/search/${
+      this.props.pageNumber
+    }?app_id=${adzunaAPPKey}&app_key=${adzunaAPIKey}&results_per_page=${
+      this.props.maxResultsNumber
+    }&${this.runQueries()}&category=to-rent`;
 
     const headers = {
       "Content-Type": "application/json",
       "X-Requested-With": "XMLHttpRequest"
     };
 
-    console.log(endpoint);
-
     fetch(endpoint, {
       headers: headers
     })
       .then(res => res.json())
       .then(data => {
+        console.log(endpoint);
         this.props.saveApiData(data);
         if (this.props.errorPage) {
           this.props.errorPage(false);
@@ -115,7 +149,6 @@ class SearchBar extends Component {
     }
     return options;
   };
-
   createMileOptions = () => {
     let options = [];
 
@@ -163,30 +196,41 @@ class SearchBar extends Component {
     return options;
   };
 
+  handleMaxNumberChange = e => {
+    let { value } = e.target;
+    if (value > 50) {
+      value = 50;
+    } else if (value < 1) {
+      value = 1;
+    }
+    this.props.updateMaxResultsNumber(value);
+  };
+
   render() {
     return (
       <div className="container " style={{ marginTop: "50px" }}>
         <div className="row">
-          <div className="input-field col l4 m3 s12">
+          <div
+            className="input-field col l6 m6 s12"
+            style={{ marginBottom: "0", marginTop: "28px" }}
+          >
             <i className="material-icons prefix" onClick={this.runFetchApi}>
               search
             </i>
-            <input
-              type="text"
-              id="autocomplete-input"
-              className="autocomplete"
+            <Autocomplete
+              style={{ width: "90%", marginTop: "-2rem" }}
               name="where"
-              onChange={this.handleInputChange}
-              onKeyPress={e => {
-                if (e.key === "Enter") {
-                  this.runFetchApi();
-                  this.props.saveSearchTerm(e.target.value);
-                }
+              onPlaceSelected={place => {
+                this.handleGoogleSearchTerm(place);
+                this.props.errorPage("");
+                this.runFetchApi();
               }}
               defaultValue={this.props.searchTerm}
+              types={["(regions)"]}
+              componentRestrictions={{ country: "gb" }}
             />
           </div>
-          <div className="input-field col s4 l2 m2">
+          <div className="input-field col s4 l3 m3">
             <select
               onChange={this.handleSelectChange}
               name="distance"
@@ -199,17 +243,7 @@ class SearchBar extends Component {
               {this.createMileOptions()}
             </select>
           </div>
-          <div className="input-field col s4 l2 m2">
-            <select
-              onChange={this.handleSelectChange}
-              name="price_min"
-              value={this.state.price_min}
-            >
-              <option value="">Min Price</option>
-              {this.createPriceOptions()}
-            </select>
-          </div>
-          <div className="input-field col s4 l2 m2">
+          <div className="input-field col s4 l3 m3">
             <select
               onChange={this.handleSelectChange}
               name="price_max"
@@ -219,7 +253,17 @@ class SearchBar extends Component {
               {this.createPriceOptions()}
             </select>
           </div>
-          <div className="input-field col s4 l2 m2">
+          <div className="input-field col s4 l3 m3">
+            <select
+              onChange={this.handleSelectChange}
+              name="price_min"
+              value={this.state.price_min}
+            >
+              <option value="">Min Price</option>
+              {this.createPriceOptions()}
+            </select>
+          </div>
+          <div className="input-field col s4 l3 m3">
             <select
               onChange={this.handleSelectChange}
               name="beds"
@@ -229,7 +273,7 @@ class SearchBar extends Component {
               {this.createBedOptions()}
             </select>
           </div>
-          <div className="input-field col s4 l2 m2">
+          <div className="input-field col s4 l3 m3">
             <select
               onChange={this.handleSelectChange}
               name="property_type"
@@ -239,6 +283,18 @@ class SearchBar extends Component {
               {this.createPropertyTypeOptions()}
             </select>
           </div>
+          <div className="input-field col s4 l3 m3">
+            <i className="material-icons prefix">find_in_page</i>
+            <input
+              id="results_per_page"
+              type="number"
+              className="validate center"
+              min="1"
+              onChange={this.handleMaxNumberChange}
+              max="50"
+              value={this.props.maxResultsNumber}
+            />
+          </div>
         </div>
       </div>
     );
@@ -246,10 +302,19 @@ class SearchBar extends Component {
 }
 
 const mapStateToProps = state => ({
-  searchTerm: state.search.searchTerm
+  searchTerm: state.search.searchTerm,
+  pageNumber: state.search.pageNumber,
+  maxResultsNumber: state.search.maxResultsNumber,
+  error: state.search.error
 });
 
 export default connect(
   mapStateToProps,
-  { saveApiData, saveSearchTerm, errorPage }
+  {
+    saveApiData,
+    saveSearchTerm,
+    errorPage,
+    updatePageNumber,
+    updateMaxResultsNumber
+  }
 )(SearchBar);

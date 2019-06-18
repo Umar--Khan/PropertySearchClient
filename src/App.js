@@ -11,6 +11,7 @@ import Account from "./components/Account";
 
 import FavPropertiesList from "./components/AccountPage/FavPropertiesList";
 import SingleProperty from "./components/saleListingsPage/SingleProperty";
+import SinglePropertyRent from "./components/rentListingsPage/SinglePropertyRent";
 
 import Footer from "./components/Footer";
 
@@ -53,6 +54,11 @@ class App extends Component {
           />
           <Route
             exact
+            path="/property-for-rent/search/:id"
+            component={SinglePropertyRent}
+          />
+          <Route
+            exact
             path="/property-for-sale/search"
             component={SaleListings}
           />
@@ -61,6 +67,7 @@ class App extends Component {
             path="/property-for-sale/search/:id"
             component={SingleProperty}
           />
+
           <Route exact path="/signin" component={SignIn} />
           <Route exact path="/signup" component={SignUp} />
           <Route exact path="/account" component={FavPropertiesList} />

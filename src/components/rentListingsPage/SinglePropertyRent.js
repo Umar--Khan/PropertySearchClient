@@ -4,8 +4,8 @@ import axios from "axios";
 import M from "materialize-css";
 import { Link } from "react-router-dom";
 
-import ImageSlider from "./ImageSlider";
-import GoogleMap from "./GoogleMapPage";
+import ImageSlider from "../saleListingsPage/ImageSlider";
+import GoogleMap from "../saleListingsPage/GoogleMapPage";
 
 import { errorPage } from "../../actions/searchActions";
 
@@ -16,7 +16,7 @@ class SingleProperty extends Component {
 
   componentDidMount() {
     if (!this.props.singleProperty) {
-      return this.props.history.push("/property-for-sale/search");
+      return this.props.history.push("/property-for-rent/search");
     }
 
     window.scrollBy(0, -window.innerHeight);
@@ -39,9 +39,7 @@ class SingleProperty extends Component {
               urls: JSON.parse(this.sanitazeData(pls.data).join(""))
             });
           })
-          .catch(err =>
-            console.log(err, this.props.singleProperty.redirect_url)
-          )
+          .catch(err => console.log(err))
       );
   }
 
@@ -61,7 +59,7 @@ class SingleProperty extends Component {
 
     const index = result.lastIndexOf(",");
     return result.split("").map((item, pos) => {
-      if (pos != index) {
+      if (pos !== index) {
         return item;
       }
     });
@@ -113,19 +111,17 @@ class SingleProperty extends Component {
           <div className="container" style={{ minHeight: "35rem" }}>
             <div className="row">
               <div className="col l12 s12 m12">
-                <h5>
-                  {singleProperty.title === "studio"
-                    ? "Studio flat to rent"
-                    : `${singleProperty.title}`}
-                </h5>
+                <h5>{singleProperty.title}</h5>
                 <h4 className="right-align teal-text text-lighten-2">
-                  {singleProperty.sale_price &&
-                    `£${this.numberWithCommas(singleProperty.sale_price)}`}
+                  {singleProperty.price_per_month &&
+                    `£${this.numberWithCommas(
+                      singleProperty.price_per_month
+                    )} pcm`}
                 </h4>
                 <h6>{singleProperty.location.display_name}</h6>
                 <div className="right-align">
                   <Link
-                    to={"/property-for-sale/search"}
+                    to={"/property-for-rent/search"}
                     className="right-align"
                   >
                     <i className="material-icons">arrow_back</i>
@@ -201,7 +197,9 @@ class SingleProperty extends Component {
                   <div className="col s12">
                     <div className="col s4 center">
                       <i className="material-icons">hotel</i>
-                      {singleProperty.beds} bedrooms
+                      {singleProperty.beds
+                        ? `${singleProperty.beds} bedroom`
+                        : "Studio"}
                     </div>
                     <div className="col s4 center">
                       <i className="material-icons">grain</i>1 bathroom
@@ -261,8 +259,7 @@ class SingleProperty extends Component {
 
 const mapStateToProps = state => ({
   singleProperty: state.property.singleProperty,
-  error: state.search.error,
-  currentUser: state.user.currentUser
+  error: state.search.error
 });
 
 export default connect(

@@ -41,7 +41,6 @@ export class GoogleMapPage extends Component {
   }
 
   render() {
-    const googleMapsApiKey = "AIzaSyAoe5F9tcpX9_AigGhnmKCdQm3qPQLh4zE";
     const streetViewPanoramaOptions = {
       position: { lat: this.props.lat, lng: this.props.lng },
       pov: { heading: 50, pitch: 1 },
@@ -107,7 +106,7 @@ export class GoogleMapPage extends Component {
             }}
           >
             <ReactStreetview
-              apiKey={googleMapsApiKey}
+              apiKey={googleAPI}
               streetViewPanoramaOptions={streetViewPanoramaOptions}
             />
           </div>

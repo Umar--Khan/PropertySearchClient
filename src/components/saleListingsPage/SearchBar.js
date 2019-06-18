@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Autocomplete from "react-google-autocomplete";
 import { adzunaAPIKey, adzunaAPPKey } from "../../apiKeys";
 import M from "materialize-css";
-import "./Style.css";
+// import "./Style.css";
 
 import {
   saveApiData,
@@ -17,7 +17,7 @@ class SearchBar extends Component {
   state = {
     where: this.props.searchTerm,
     distance: "0.1",
-    price_min: 50000,
+    price_min: 25000,
     price_max: "",
     beds: "",
     property_type: ""
