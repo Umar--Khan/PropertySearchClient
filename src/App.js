@@ -7,11 +7,9 @@ import RentListings from "./components/RentListings";
 import SaleListings from "./components/SaleListings";
 import SignIn from "./components/signInSignOut/SignIn";
 import SignUp from "./components/signInSignOut/SignUp";
-import Account from "./components/Account";
 
 import FavPropertiesList from "./components/AccountPage/FavPropertiesList";
 import SingleProperty from "./components/saleListingsPage/SingleProperty";
-import SinglePropertyRent from "./components/rentListingsPage/SinglePropertyRent";
 
 import Footer from "./components/Footer";
 
@@ -55,7 +53,7 @@ class App extends Component {
           <Route
             exact
             path="/property-for-rent/search/:id"
-            component={SinglePropertyRent}
+            component={SingleProperty}
           />
           <Route
             exact

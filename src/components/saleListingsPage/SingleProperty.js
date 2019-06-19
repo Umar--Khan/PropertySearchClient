@@ -267,8 +267,11 @@ class SingleProperty extends Component {
                   className="right-align teal-text text-lighten-2"
                   style={{ marginTop: "4px" }}
                 >
-                  {singleProperty.sale_price &&
-                    `£${this.numberWithCommas(singleProperty.sale_price)}`}
+                  {singleProperty.sale_price
+                    ? `£${this.numberWithCommas(singleProperty.sale_price)}`
+                    : `£${this.numberWithCommas(
+                        singleProperty.price_per_month
+                      )} pcm`}
                 </h4>
               </div>
             </div>
