@@ -13,7 +13,11 @@ class PropertyCards extends Component {
   };
 
   numberWithCommas = x => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    } else {
+      return (x = 3000);
+    }
   };
 
   getUser = () => {
