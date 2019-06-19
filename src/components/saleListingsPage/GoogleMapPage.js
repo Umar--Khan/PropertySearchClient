@@ -5,12 +5,6 @@ import { googleAPI } from "../../apiKeys";
 
 import { Map, GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
 
-const mapStyles = {
-  // position: "absolute",
-  width: "40%",
-  height: "40%"
-};
-
 export class GoogleMapPage extends Component {
   state = {
     showingInfoWindow: false, //Hides or the shows the infoWindow
@@ -38,6 +32,7 @@ export class GoogleMapPage extends Component {
   componentDidMount() {
     const el = document.querySelectorAll("#tabs-map-view");
     M.Tabs.init(el);
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
   render() {
@@ -62,35 +57,30 @@ export class GoogleMapPage extends Component {
         </div>
         <div
           id="test1"
-          className="col s12 center"
-          style={{ marginTop: "3rem" }}
+          className="col s12 center-align"
+          style={{
+            marginTop: "3rem",
+            position: "relative",
+            width: "950px",
+            height: "500px"
+          }}
         >
-          <div
-            style={{
-              margin: "0 auto",
-              width: "800px",
-              height: "450px"
-              //   backgroundColor: "#eeeeee"
-            }}
+          <Map
+            google={this.props.google}
+            zoom={14}
+            initialCenter={{ lat: this.props.lat, lng: this.props.lng }}
           >
-            <Map
-              google={this.props.google}
-              zoom={14}
-              style={mapStyles}
-              initialCenter={{ lat: this.props.lat, lng: this.props.lng }}
+            <Marker onClick={this.onMarkerClick} name={"Property Location"} />
+            <InfoWindow
+              marker={this.state.activeMarker}
+              visible={this.state.showingInfoWindow}
+              onClose={this.onClose}
             >
-              <Marker onClick={this.onMarkerClick} name={"Property Location"} />
-              <InfoWindow
-                marker={this.state.activeMarker}
-                visible={this.state.showingInfoWindow}
-                onClose={this.onClose}
-              >
-                <div>
-                  <h4>{this.state.selectedPlace.name}</h4>
-                </div>
-              </InfoWindow>
-            </Map>
-          </div>
+              <div>
+                <h4>{this.state.selectedPlace.name}</h4>
+              </div>
+            </InfoWindow>
+          </Map>
         </div>
         <div
           id="test2"

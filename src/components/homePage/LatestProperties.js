@@ -20,7 +20,6 @@ class LatestProperties extends Component {
       randomPostcodes[Math.floor(Math.random() * randomPostcodes.length)];
 
     if (currentUser.postcode) {
-      console.log(currentUser.postcode);
       random = encodeURIComponent(currentUser.postcode);
     }
 

@@ -9,20 +9,56 @@ import ImageSlider from "./ImageSlider";
 import GoogleMap from "./GoogleMapPage";
 
 import { errorPage } from "../../actions/searchActions";
+import LatestPropertiesCards from "../homePage/LatestPropertiesCards";
+import { adzunaAPIKey, adzunaAPPKey } from "../../apiKeys";
 
 class SingleProperty extends Component {
   state = {
     urls: "",
-    clicked: false
+    clicked: false,
+    properties: ""
   };
 
   componentDidMount() {
+    window.scrollBy(0, -9000);
     if (!this.props.singleProperty) {
       return this.props.history.push("/property-for-sale/search");
     }
 
-    window.scrollBy(0, -window.innerHeight);
+    this.clickedIfFavourite();
 
+    this.getImageUrls();
+    this.getSimilarProperties();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.urls !== this.state.urls) {
+      const el = document.querySelectorAll(".tabs");
+      M.Tabs.init(el);
+    }
+
+    if (prevProps.singleProperty !== this.props.singleProperty) {
+      this.getImageUrls();
+      this.getSimilarProperties();
+      window.scrollBy(0, -9000);
+    }
+  }
+
+  isFavourite() {
+    return this.props.currentUser.properties.some(
+      property => property.id === this.props.singleProperty.id
+    );
+  }
+
+  clickedIfFavourite = () => {
+    if (this.props.currentUser) {
+      if (this.isFavourite()) {
+        this.setState({ clicked: true });
+      }
+    }
+  };
+
+  getImageUrls = () => {
     axios
       .get(
         `https://cors-anywhere.herokuapp.com/${
@@ -52,27 +88,32 @@ class SingleProperty extends Component {
             console.log(err, this.props.singleProperty.redirect_url)
           );
       });
+  };
 
-    this.clickedIfFavourite();
-  }
+  getSimilarProperties = () => {
+    const { singleProperty } = this.props;
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.urls !== this.state.urls) {
-      const el = document.querySelectorAll(".tabs");
-      M.Tabs.init(el);
-    }
-  }
+    let postcode;
 
-  isFavourite() {
-    return this.props.currentUser.properties.some(
-      property => property.id === this.props.singleProperty.id
-    );
-  }
+    postcode = encodeURIComponent(singleProperty.postcode);
 
-  clickedIfFavourite = () => {
-    if (this.isFavourite()) {
-      this.setState({ clicked: true });
-    }
+    let endpoint = `https://cors-anywhere.herokuapp.com/https://api.adzuna.com:443/v1/api/property/gb/search/1?app_id=${adzunaAPPKey}&app_key=${adzunaAPIKey}&results_per_page=10&where=${postcode}&distance=1&category=for-sale`;
+
+    const headers = {
+      "Content-Type": "application/json",
+      "X-Requested-With": "XMLHttpRequest"
+    };
+
+    fetch(endpoint, {
+      headers: headers
+    })
+      .then(res => res.json())
+      .then(data => {
+        this.setState({ properties: data.results, loaded: true });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   numberWithCommas = x => {
@@ -187,6 +228,23 @@ class SingleProperty extends Component {
     }
   };
 
+  shortenList = () => {
+    const list = this.state.properties;
+
+    let newList = [];
+
+    for (let i = 0; i < 3; i++) {
+      newList.push(
+        list
+          .sort(function() {
+            return 0.5 - Math.random();
+          })
+          .pop()
+      );
+    }
+    return newList;
+  };
+
   render() {
     const { singleProperty } = this.props;
     return (
@@ -290,9 +348,6 @@ class SingleProperty extends Component {
                         Map & Street View
                       </a>
                     </li>
-                    {/* <li className="tab col s3">
-                  <a href="#">Market Stats</a>
-                </li> */}
                   </ul>
                 </div>
                 <div
@@ -357,43 +412,40 @@ class SingleProperty extends Component {
                           >
                             {this.state.clicked ? (
                               <div>
-                                <a
+                                <p
                                   className="btn-floating btn-medium blue darken-3"
                                   onClick={e =>
                                     this.unFavoriteProperty(singleProperty, e)
                                   }
-                                  href="#"
+                                  style={{ cursor: "pointer" }}
                                 >
                                   <i className="material-icons">delete</i>
-                                </a>
+                                </p>
                                 <p>Delete from favourites</p>
                               </div>
                             ) : (
                               <div>
-                                <a
+                                <p
                                   className="btn-floating btn-medium red accent-4"
                                   onClick={e =>
                                     this.favoriteProperty(singleProperty, e)
                                   }
-                                  href="#"
+                                  style={{ cursor: "pointer" }}
                                 >
                                   <i className="material-icons">
                                     favorite_border
                                   </i>
-                                </a>
+                                </p>
                                 <p>Save this property</p>
                               </div>
                             )}
                             <div>
-                              <a
+                              <p
                                 className="btn-floating btn-medium red accent-4"
-                                onClick={e =>
-                                  this.favoriteProperty(singleProperty, e)
-                                }
-                                href="#"
+                                style={{ cursor: "pointer" }}
                               >
                                 <i className="material-icons">share</i>
-                              </a>
+                              </p>
                               <p style={{ marginLeft: "10px" }}>
                                 Share this property
                               </p>
@@ -446,9 +498,32 @@ class SingleProperty extends Component {
                     lat={singleProperty.latitude}
                   />
                 </div>
-                {/* <div id="test4" className="col s12">
-              Test 4
-            </div> */}
+              </div>
+            </div>
+            <div className="col s12 l12 m12">
+              <div className="divider" style={{ marginTop: "1rem" }} />
+              <div className="section">
+                <h4>Similar properties</h4>
+                <div className="row">
+                  {this.state.properties ? (
+                    this.shortenList().map(property => (
+                      <LatestPropertiesCards
+                        property={property}
+                        key={property.id}
+                      />
+                    ))
+                  ) : (
+                    <div
+                      className="center"
+                      style={{ marginTop: "10rem", marginBottom: "10rem" }}
+                    >
+                      <h3>Getting Latest Data</h3>
+                      <div className="progress">
+                        <div className="indeterminate" />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

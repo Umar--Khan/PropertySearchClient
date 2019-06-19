@@ -18,6 +18,7 @@ class LatestPropertiesCards extends Component {
             <Link
               to={`/property-for-sale/search/${property.id}`}
               onClick={() => {
+                window.scrollBy(0, -window.innerHeight);
                 this.props.saveSingleProperty(property);
               }}
             >
@@ -25,23 +26,22 @@ class LatestPropertiesCards extends Component {
             </Link>
           </div>
           <div className="card-content">
-            <span className="card-title activator grey-text text-darken-4 center">
+            <span className="card-title teal-text center" style={semiBoldText2}>
               £{this.numberWithCommas(property.sale_price)}
-              <i className="material-icons right">close</i>
             </span>
             <span
-              className="card-title activator grey-text text-darken-4 center"
+              className="card-title grey-text text-darken-4 center"
               style={semiBoldText}
             >
               {property.title === "studio"
                 ? `Studio Flat in ${property.location.display_name}`
                 : `${property.beds} bed in ${property.location.display_name}`}
-              <i className="material-icons right">more_vert</i>
             </span>
             <p className="center">
               <Link
                 to={`/property-for-sale/search/${property.id}`}
                 onClick={() => {
+                  window.scrollBy(0, -window.innerHeight);
                   this.props.saveSingleProperty(property);
                 }}
               >
@@ -63,6 +63,7 @@ class LatestPropertiesCards extends Component {
 }
 
 const semiBoldText = { fontSize: "1.5rem", fontWeight: "200" };
+const semiBoldText2 = { fontSize: "2rem", fontWeight: "400" };
 
 export default connect(
   null,
