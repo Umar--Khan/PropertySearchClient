@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Autocomplete from "react-google-autocomplete";
 import { adzunaAPIKey, adzunaAPPKey } from "../../apiKeys";
 import M from "materialize-css";
-// import "./Style.css";
+import { saveCurrentUser } from "../../actions/userActions";
 
 import {
   saveApiData,
@@ -13,14 +13,20 @@ import {
   updateMaxResultsNumber
 } from "../../actions/searchActions";
 
+import "../saleListingsPage/SearchBar.css";
+
 class SearchBar extends Component {
   state = {
     where: this.props.searchTerm,
     distance: "0.1",
-    price_min: "",
+    price_min: 1,
     price_max: "",
     beds: "",
-    property_type: ""
+    property_type: "",
+    category: "to-rent",
+    sort_direction: "",
+    max_days_old: "",
+    sort_by: ""
   };
 
   componentDidMount() {
@@ -33,6 +39,25 @@ class SearchBar extends Component {
 
     if (!this.state.where) {
       this.props.errorPage("No Search Term");
+    }
+
+    let acc = document.getElementsByClassName("accordion");
+    let i;
+
+    for (i = 0; i < acc.length; i++) {
+      acc[i].addEventListener("click", function() {
+        /* Toggle between adding and removing the "active" class,
+        to highlight the button that controls the panel */
+        this.classList.toggle("active");
+
+        /* Toggle between hiding and showing the active panel */
+        let panel = document.getElementsByClassName("panel")[0];
+        if (panel.style.display === "block") {
+          panel.style.display = "none";
+        } else {
+          panel.style.display = "block";
+        }
+      });
     }
   }
 
@@ -56,17 +81,92 @@ class SearchBar extends Component {
     );
   };
 
-  handleInputChange = e => {
-    e.preventDefault();
-
-    const { value, name } = e.target;
-
-    this.setState({ [name]: value });
-  };
-
   handleGoogleSearchTerm = search => {
     this.setState({ where: search.formatted_address });
     this.props.saveSearchTerm(search.formatted_address);
+  };
+
+  makeID = () => {
+    return (
+      "_" +
+      Math.random()
+        .toString(36)
+        .substr(2, 9)
+    );
+  };
+
+  getUser = () => {
+    const apiUrl = "http://localhost:3001/api";
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      return fetch(apiUrl + "/user", {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          Authorization: `Token ${token}`
+        }
+      })
+        .then(resp => resp.json())
+        .then(data => {
+          if (data.user) {
+            this.props.saveCurrentUser(data.user);
+          }
+        })
+        .catch(err => console.log(err));
+    }
+  };
+
+  saveSearch = e => {
+    e.preventDefault();
+
+    if (!this.props.currentUser) {
+      M.toast({ html: "Log in to save search" });
+      return;
+    }
+
+    if (!this.props.searchTerm) {
+      M.toast({ html: "Try searching first" });
+      return;
+    }
+
+    const apiUrl = "http://localhost:3001/api";
+    const token = localStorage.getItem("token");
+
+    const userId = this.props.currentUser._id;
+
+    const search = {
+      where: this.props.searchTerm,
+      distance: this.state.distance,
+      price_min: this.state.price_min,
+      price_max: this.state.price_max,
+      beds: this.state.beds,
+      property_type: this.state.property_type,
+      search_type: "for-sale",
+      id: this.makeID()
+    };
+
+    if (token) {
+      return fetch(apiUrl + `/${userId}/search`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          Authorization: `Token ${token}`
+        },
+        body: JSON.stringify({ search: search })
+      })
+        .then(resp => resp.json())
+        .then(
+          data => this.props.saveCurrentUser(data.user),
+          M.toast(
+            { html: "Added to Saved Searches" },
+            this.setState({ clicked: true })
+          )
+        )
+        .then(this.getUser())
+        .catch(err => console.log(err));
+    }
   };
 
   runQueries = () => {
@@ -92,14 +192,14 @@ class SearchBar extends Component {
       this.props.pageNumber
     }?app_id=${adzunaAPPKey}&app_key=${adzunaAPIKey}&results_per_page=${
       this.props.maxResultsNumber
-    }&${this.runQueries()}&category=to-rent`;
-
-    console.log(endpoint);
+    }&what_exclude=land&${this.runQueries()}`;
 
     const headers = {
       "Content-Type": "application/json",
       "X-Requested-With": "XMLHttpRequest"
     };
+
+    console.log(endpoint);
 
     fetch(endpoint, {
       headers: headers
@@ -155,6 +255,7 @@ class SearchBar extends Component {
     }
     return options;
   };
+
   createMileOptions = () => {
     let options = [];
 
@@ -259,47 +360,93 @@ class SearchBar extends Component {
               {this.createPriceOptions()}
             </select>
           </div>
-          <div className="input-field col s4 l3 m3">
-            <select
-              onChange={this.handleSelectChange}
-              name="price_min"
-              value={this.state.price_min}
-            >
-              <option value="">Min Price</option>
-              {this.createPriceOptions()}
-            </select>
+          <div className="col s6">
+            <div style={centerIcons2} onClick={this.saveSearch}>
+              <i className="material-icons">save</i>
+              Save This Search
+            </div>
           </div>
-          <div className="input-field col s4 l3 m3">
-            <select
-              onChange={this.handleSelectChange}
-              name="beds"
-              value={this.state.beds}
-            >
-              <option value="">Min Beds</option>
-              {this.createBedOptions()}
-            </select>
+          <div className="col s6">
+            <button className="accordion" style={centerIcons}>
+              <i className="material-icons">filter_list</i>More Filters
+            </button>
           </div>
-          <div className="input-field col s4 l3 m3">
-            <select
-              onChange={this.handleSelectChange}
-              name="property_type"
-              value={this.state.property_type}
-            >
-              <option value="">Property Type</option>
-              {this.createPropertyTypeOptions()}
-            </select>
-          </div>
-          <div className="input-field col s4 l3 m3">
-            <i className="material-icons prefix">find_in_page</i>
-            <input
-              id="results_per_page"
-              type="number"
-              className="validate center"
-              min="1"
-              onChange={this.handleMaxNumberChange}
-              max="50"
-              value={this.props.maxResultsNumber}
-            />
+          <div className="panel">
+            <div className="input-field col s4 l3 m3">
+              <select
+                onChange={this.handleSelectChange}
+                name="price_min"
+                value={this.state.price_min}
+              >
+                <option value="">Min Price</option>
+                {this.createPriceOptions()}
+              </select>
+            </div>
+            <div className="input-field col s4 l3 m3">
+              <select
+                onChange={this.handleSelectChange}
+                name="beds"
+                value={this.state.beds}
+              >
+                <option value="">Min Beds</option>
+                {this.createBedOptions()}
+              </select>
+            </div>
+            <div className="input-field col s4 l3 m3">
+              <select
+                onChange={this.handleSelectChange}
+                name="property_type"
+                value={this.state.property_type}
+              >
+                <option value="">Property Type</option>
+                {this.createPropertyTypeOptions()}
+              </select>
+            </div>
+            <div className="input-field col s4 l3 m3">
+              <i className="material-icons prefix">find_in_page</i>
+              <input
+                id="results_per_page"
+                type="number"
+                className="validate center"
+                min="1"
+                onChange={this.handleMaxNumberChange}
+                max="50"
+                value={this.props.maxResultsNumber}
+              />
+            </div>
+            <div className="input-field col s4">
+              <select
+                onChange={this.handleSelectChange}
+                name="sort_by"
+                value={this.state.sort_by}
+              >
+                <option value="">Sort By</option>,
+                <option value="price">Price</option>,
+                <option value="date">Date</option>,
+              </select>
+            </div>
+            <div className="input-field col s4">
+              <select
+                onChange={this.handleSelectChange}
+                name="sort_direction"
+                value={this.state.sort_direction}
+              >
+                <option value="down">Ascending</option>,
+                <option value="up">Descending</option>,
+              </select>
+            </div>
+            <div className="input-field col s4">
+              <select
+                onChange={this.handleSelectChange}
+                name="max_days_old"
+                value={this.state.max_days_old}
+              >
+                <option value="">Days Old</option>,
+                <option value="7">7 Days Old</option>,
+                <option value="14">14 Days Old</option>,
+                <option value="30">1 Month Old</option>,
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -307,11 +454,27 @@ class SearchBar extends Component {
   }
 }
 
+const centerIcons = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  cursor: "pointer"
+};
+
+const centerIcons2 = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  cursor: "pointer",
+  marginTop: "1rem"
+};
+
 const mapStateToProps = state => ({
   searchTerm: state.search.searchTerm,
   pageNumber: state.search.pageNumber,
   maxResultsNumber: state.search.maxResultsNumber,
-  error: state.search.error
+  error: state.search.error,
+  currentUser: state.user.currentUser
 });
 
 export default connect(
@@ -321,6 +484,7 @@ export default connect(
     saveSearchTerm,
     errorPage,
     updatePageNumber,
-    updateMaxResultsNumber
+    updateMaxResultsNumber,
+    saveCurrentUser
   }
 )(SearchBar);

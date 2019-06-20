@@ -201,7 +201,6 @@ class SearchBar extends Component {
 
     console.log(endpoint);
 
-    debugger;
     fetch(endpoint, {
       headers: headers
     })
@@ -419,7 +418,7 @@ class SearchBar extends Component {
                 value={this.props.maxResultsNumber}
               />
             </div>
-            <div className="input-field col s4 l2 m2">
+            <div className="input-field col s4">
               <select
                 onChange={this.handleSelectChange}
                 name="sort_by"
@@ -430,7 +429,7 @@ class SearchBar extends Component {
                 <option value="date">Date</option>,
               </select>
             </div>
-            <div className="input-field col s4 l2 m2">
+            <div className="input-field col s4">
               <select
                 onChange={this.handleSelectChange}
                 name="sort_direction"
@@ -440,7 +439,7 @@ class SearchBar extends Component {
                 <option value="up">Descending</option>,
               </select>
             </div>
-            {/* <div className="input-field col s4 l2 m2">
+            <div className="input-field col s4">
               <select
                 onChange={this.handleSelectChange}
                 name="max_days_old"
@@ -451,7 +450,7 @@ class SearchBar extends Component {
                 <option value="14">14 Days Old</option>,
                 <option value="30">1 Month Old</option>,
               </select>
-            </div> */}
+            </div>
           </div>
         </div>
       </div>
