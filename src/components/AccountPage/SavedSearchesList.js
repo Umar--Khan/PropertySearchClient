@@ -18,16 +18,6 @@ class SavedSearchesList extends Component {
     const apiUrl = "http://localhost:3001/api";
     const token = localStorage.getItem("token");
 
-    let searchTerm;
-
-    if (this.props.search.searchTerm) {
-      let searchTerm = this.props.search.searchTerm;
-    }
-
-    if (searchTerm) {
-      this.props.saveSearchTerm(searchTerm);
-    }
-
     if (token) {
       return fetch(apiUrl + "/user", {
         headers: {
@@ -46,28 +36,68 @@ class SavedSearchesList extends Component {
     }
   };
 
+  removeSearch = search => {
+    const apiUrl = "http://localhost:3001/api";
+    const token = localStorage.getItem("token");
+
+    const userId = this.props.currentUser._id;
+
+    if (token) {
+      return fetch(apiUrl + `/${userId}/search`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          Authorization: `Token ${token}`
+        },
+        body: JSON.stringify({ search: search })
+      })
+        .then(resp => resp.json())
+        .then(resp => this.getUser())
+        .catch(err => console.log(err));
+    }
+  };
+
   render() {
     const { search } = this.props;
+
     return (
       <li className="collection-item">
-        <div className="center">
-          {search.where}
+        <div>
           <Link
-            to={`/property-${search.search_type}/`}
+            className="grey-text text-darken-3"
+            style={{ float: "left" }}
+            to={
+              search.search_type === "for-sale"
+                ? "/property-for-sale/search"
+                : "/property-for-rent/search"
+            }
+            onClick={() => this.props.saveSearchTerm(search.where)}
+          >
+            {search.search_type === "for-sale"
+              ? "Properties for sale in"
+              : "Properties for rent in"}{" "}
+            {search.where}
+          </Link>
+          <Link
+            to={
+              search.search_type === "for-sale"
+                ? "/property-for-sale/search"
+                : "/property-for-rent/search"
+            }
             className="secondary-content"
-            onClick={this.redirectToSearch}
+            onClick={() => this.props.saveSearchTerm(search.where)}
           >
             <i className="material-icons">send</i>
           </Link>
           <a
             href="#!"
             className="secondary-content"
-            onClick={this.removeSearch}
+            onClick={() => this.removeSearch(search)}
             style={{ marginRight: "4rem" }}
           >
             <i className="material-icons">delete</i>
           </a>
-
           <p
             className="secondary-content"
             onClick={this.search}
@@ -81,7 +111,11 @@ class SavedSearchesList extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   { saveSearchTerm, saveCurrentUser }
 )(SavedSearchesList);

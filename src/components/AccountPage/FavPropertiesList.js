@@ -68,7 +68,7 @@ class FavPropertiesList extends Component {
             </div>
             <div id="test2" className="col s12">
               <div className="row">
-                <div class="collection">
+                <div className="collection">
                   {searches.map(search => (
                     <SavedSearchesList key={search.id} search={search} />
                   ))}

@@ -375,7 +375,7 @@ class SearchBar extends Component {
           </div>
           <div className="col s4 l3 m3">
             <p style={centerIcons} onClick={this.saveSearch}>
-              <i class="material-icons">save</i>
+              <i className="material-icons">save</i>
               Save This Search
             </p>
           </div>
