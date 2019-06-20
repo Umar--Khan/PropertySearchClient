@@ -13,6 +13,8 @@ import {
   updateMaxResultsNumber
 } from "../../actions/searchActions";
 
+import "./SearchBar.css";
+
 class SearchBar extends Component {
   state = {
     where: this.props.searchTerm,
@@ -21,6 +23,7 @@ class SearchBar extends Component {
     price_max: "",
     beds: "",
     property_type: "",
+    category: "for-sale",
     sort_direction: "",
     max_days_old: "",
     sort_by: ""
@@ -36,6 +39,25 @@ class SearchBar extends Component {
 
     if (!this.state.where) {
       this.props.errorPage("No Search Term");
+    }
+
+    let acc = document.getElementsByClassName("accordion");
+    let i;
+
+    for (i = 0; i < acc.length; i++) {
+      acc[i].addEventListener("click", function() {
+        /* Toggle between adding and removing the "active" class,
+        to highlight the button that controls the panel */
+        this.classList.toggle("active");
+
+        /* Toggle between hiding and showing the active panel */
+        let panel = document.getElementsByClassName("panel")[0];
+        if (panel.style.display === "block") {
+          panel.style.display = "none";
+        } else {
+          panel.style.display = "block";
+        }
+      });
     }
   }
 
@@ -102,6 +124,12 @@ class SearchBar extends Component {
       M.toast({ html: "Log in to save search" });
       return;
     }
+
+    if (!this.props.searchTerm) {
+      M.toast({ html: "Try searching first" });
+      return;
+    }
+
     const apiUrl = "http://localhost:3001/api";
     const token = localStorage.getItem("token");
 
@@ -164,13 +192,16 @@ class SearchBar extends Component {
       this.props.pageNumber
     }?app_id=${adzunaAPPKey}&app_key=${adzunaAPIKey}&results_per_page=${
       this.props.maxResultsNumber
-    }&what_exclude=land&${this.runQueries()}&category=for-sale`;
+    }&what_exclude=land&${this.runQueries()}`;
 
     const headers = {
       "Content-Type": "application/json",
       "X-Requested-With": "XMLHttpRequest"
     };
 
+    console.log(endpoint);
+
+    debugger;
     fetch(endpoint, {
       headers: headers
     })
@@ -334,86 +365,93 @@ class SearchBar extends Component {
               {this.createPriceOptions()}
             </select>
           </div>
-          <div className="input-field col s4 l3 m3">
-            <select
-              onChange={this.handleSelectChange}
-              name="price_min"
-              value={this.state.price_min}
-            >
-              <option value="">Min Price</option>
-              {this.createPriceOptions()}
-            </select>
-          </div>
-          <div className="input-field col s4 l3 m3">
-            <select
-              onChange={this.handleSelectChange}
-              name="beds"
-              value={this.state.beds}
-            >
-              <option value="">Min Beds</option>
-              {this.createBedOptions()}
-            </select>
-          </div>
-          <div className="input-field col s4 l3 m3">
-            <select
-              onChange={this.handleSelectChange}
-              name="property_type"
-              value={this.state.property_type}
-            >
-              <option value="">Property Type</option>
-              {this.createPropertyTypeOptions()}
-            </select>
-          </div>
-          <div className="input-field col s4 l3 m3">
-            <i className="material-icons prefix">find_in_page</i>
-            <input
-              id="results_per_page"
-              type="number"
-              className="validate center"
-              min="1"
-              onChange={this.handleMaxNumberChange}
-              max="50"
-              value={this.props.maxResultsNumber}
-            />
-          </div>
-          <div className="input-field col s4 l2 m2">
-            <select
-              onChange={this.handleSelectChange}
-              name="sort_by"
-              value={this.state.sort_by}
-            >
-              <option value="">Sort By</option>,
-              <option value="price">Price</option>,
-              <option value="date">Date</option>,
-            </select>
-          </div>
-          <div className="input-field col s4 l2 m2">
-            <select
-              onChange={this.handleSelectChange}
-              name="sort_direction"
-              value={this.state.sort_direction}
-            >
-              <option value="down">Ascending</option>,
-              <option value="up">Descending</option>,
-            </select>
-          </div>
-          <div className="input-field col s4 l2 m2">
-            <select
-              onChange={this.handleSelectChange}
-              name="max_days_old"
-              value={this.state.max_days_old}
-            >
-              <option value="">Days Old</option>,
-              <option value="7">7 Days Old</option>,
-              <option value="14">14 Days Old</option>,
-              <option value="30">1 Month Old</option>,
-            </select>
-          </div>
-          <div className="col s12 l3 m3">
-            <p style={centerIcons} onClick={this.saveSearch}>
+          <div className="col s6">
+            <div style={centerIcons2} onClick={this.saveSearch}>
               <i className="material-icons">save</i>
               Save This Search
-            </p>
+            </div>
+          </div>
+          <div className="col s6">
+            <button className="accordion" style={centerIcons}>
+              <i className="material-icons">filter_list</i>More Filters
+            </button>
+          </div>
+          <div className="panel">
+            <div className="input-field col s4 l3 m3">
+              <select
+                onChange={this.handleSelectChange}
+                name="price_min"
+                value={this.state.price_min}
+              >
+                <option value="">Min Price</option>
+                {this.createPriceOptions()}
+              </select>
+            </div>
+            <div className="input-field col s4 l3 m3">
+              <select
+                onChange={this.handleSelectChange}
+                name="beds"
+                value={this.state.beds}
+              >
+                <option value="">Min Beds</option>
+                {this.createBedOptions()}
+              </select>
+            </div>
+            <div className="input-field col s4 l3 m3">
+              <select
+                onChange={this.handleSelectChange}
+                name="property_type"
+                value={this.state.property_type}
+              >
+                <option value="">Property Type</option>
+                {this.createPropertyTypeOptions()}
+              </select>
+            </div>
+            <div className="input-field col s4 l3 m3">
+              <i className="material-icons prefix">find_in_page</i>
+              <input
+                id="results_per_page"
+                type="number"
+                className="validate center"
+                min="1"
+                onChange={this.handleMaxNumberChange}
+                max="50"
+                value={this.props.maxResultsNumber}
+              />
+            </div>
+            <div className="input-field col s4 l2 m2">
+              <select
+                onChange={this.handleSelectChange}
+                name="sort_by"
+                value={this.state.sort_by}
+              >
+                <option value="">Sort By</option>,
+                <option value="price">Price</option>,
+                <option value="date">Date</option>,
+              </select>
+            </div>
+            <div className="input-field col s4 l2 m2">
+              <select
+                onChange={this.handleSelectChange}
+                name="sort_direction"
+                value={this.state.sort_direction}
+              >
+                <option value="down">Ascending</option>,
+                <option value="up">Descending</option>,
+              </select>
+            </div>
+            {/* <div className="input-field col s4 l2 m2">
+              <select
+                onChange={this.handleSelectChange}
+                name="max_days_old"
+                value={this.state.max_days_old}
+              >
+                <option value="">Days Old</option>,
+                <option value="7">7 Days Old</option>,
+                <option value="14">14 Days Old</option>,
+                <option value="30">1 Month Old</option>,
+              </select>
+            </div> */}
           </div>
         </div>
       </div>
@@ -426,6 +464,14 @@ const centerIcons = {
   alignItems: "center",
   justifyContent: "center",
   cursor: "pointer"
+};
+
+const centerIcons2 = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  cursor: "pointer",
+  marginTop: "1rem"
 };
 
 const mapStateToProps = state => ({

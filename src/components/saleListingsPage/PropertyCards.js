@@ -158,7 +158,6 @@ class PropertyCards extends Component {
                   {result.beds} bedroom {_.lowerCase(result.property_type)}{" "}
                   {_.lowerCase(result.category.label)}
                 </h5>
-                <h6 style={semiBoldText}>{result.location.display_name}</h6>
                 <p>
                   {_.truncate(result.description, {
                     length: 175
@@ -166,21 +165,14 @@ class PropertyCards extends Component {
                 </p>
               </div>
               <div className="card-action">
-                <div className="col s4">
-                  <Link
-                    to={`/property-for-sale/search/${result.id}`}
-                    onClick={() => {
-                      this.props.saveSingleProperty(result);
-                    }}
-                  >
-                    View More Info
-                  </Link>
-                </div>
-                <div className="col s8">
-                  <p style={{ float: "right" }}>
-                    Added by {result.agent.display_name}
-                  </p>
-                </div>
+                <Link
+                  to={`/property-for-sale/search/${result.id}`}
+                  onClick={() => {
+                    this.props.saveSingleProperty(result);
+                  }}
+                >
+                  View More Info
+                </Link>
               </div>
             </div>
             <div className="valign-wrapper">

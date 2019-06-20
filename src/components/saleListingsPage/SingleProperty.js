@@ -24,7 +24,11 @@ class SingleProperty extends Component {
   componentDidMount() {
     window.scrollBy(0, -9000);
     if (!this.props.singleProperty) {
-      return this.props.history.push("/property-for-sale/search");
+      if (this.props.match.url.includes("property-for-rent")) {
+        return this.props.history.push("/property-for-rent/search");
+      } else {
+        return this.props.history.push("/property-for-sale/search");
+      }
     }
 
     this.clickedIfFavourite();
@@ -291,7 +295,11 @@ class SingleProperty extends Component {
               </div>
               <div className="col s6" style={{ marginTop: "9px" }}>
                 <Link
-                  to={"/property-for-sale/search"}
+                  to={
+                    singleProperty.sale_price
+                      ? "/property-for-sale/search/"
+                      : "/property-for-rent/search/"
+                  }
                   style={{
                     display: "flex",
                     float: "right"

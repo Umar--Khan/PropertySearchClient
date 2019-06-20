@@ -94,6 +94,8 @@ class SearchBar extends Component {
       this.props.maxResultsNumber
     }&${this.runQueries()}&category=to-rent`;
 
+    console.log(endpoint);
+
     const headers = {
       "Content-Type": "application/json",
       "X-Requested-With": "XMLHttpRequest"
