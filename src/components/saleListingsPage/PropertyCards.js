@@ -56,8 +56,6 @@ class PropertyCards extends Component {
     const userId = this.props.currentUser._id;
 
     if (token) {
-      //   e.target.parentElement.className =
-      //     "btn-floating btn-large scale-transition scale-out";
       return fetch(apiUrl + `/${userId}/favorite`, {
         method: "POST",
         headers: {
@@ -181,7 +179,7 @@ class PropertyCards extends Component {
 
               {this.state.clicked ? (
                 <a
-                  className="btn-floating btn-large scale-transition blue darken-3"
+                  className="btn-floating btn-large light-blue"
                   onClick={e => this.unFavoriteProperty(result, e)}
                   href="#"
                   style={{ marginLeft: "3rem" }}
@@ -190,7 +188,7 @@ class PropertyCards extends Component {
                 </a>
               ) : (
                 <a
-                  className="btn-floating btn-large scale-transition red accent-4"
+                  className="btn-floating btn-large teal"
                   onClick={e => this.favoriteProperty(result, e)}
                   href="#"
                   style={{ marginLeft: "3rem" }}

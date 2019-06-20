@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import { Link } from "react-router-dom";
 import M from "materialize-css";
 
 import { connect } from "react-redux";
@@ -62,6 +62,19 @@ class FavPropertiesList extends Component {
                     <h3 className="center-align" style={{ marginTop: "20rem" }}>
                       You have no saved properties
                     </h3>
+                    <div className="center">
+                      <Link
+                        style={{
+                          cursor: "pointer",
+                          fontSize: "2rem",
+                          fontWeight: "400"
+                        }}
+                        className="teal-text"
+                        to={"/property-for-sale/search"}
+                      >
+                        Want to check out properties?
+                      </Link>
+                    </div>
                   </div>
                 )}
               </div>
@@ -78,6 +91,19 @@ class FavPropertiesList extends Component {
                     <h3 className="center-align" style={{ marginTop: "20rem" }}>
                       You have no saved searches
                     </h3>
+                    <div className="center">
+                      <Link
+                        style={{
+                          cursor: "pointer",
+                          fontSize: "2rem",
+                          fontWeight: "400"
+                        }}
+                        className="teal-text"
+                        to={"/property-for-sale/search"}
+                      >
+                        Want to check out properties?
+                      </Link>
+                    </div>
                   </div>
                 )}
               </div>

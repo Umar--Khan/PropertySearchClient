@@ -181,8 +181,6 @@ class SingleProperty extends Component {
     const userId = this.props.currentUser._id;
 
     if (token) {
-      //   e.target.parentElement.className =
-      //     "btn-floating btn-large scale-transition scale-out";
       return fetch(apiUrl + `/${userId}/favorite`, {
         method: "POST",
         headers: {
