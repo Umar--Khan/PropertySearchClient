@@ -26,9 +26,9 @@ class NavBar extends Component {
     return (
       <div>
         <nav>
-          <div className="nav-wrapper">
+          <div className="nav-wrapper grey lighten-3">
             <div className="container">
-              <Link to={"/"} className="brand-logo">
+              <Link to={"/"} className="brand-logo teal-text text-lighten-1">
                 <i className="material-icons">home</i>MoveRight
               </Link>
               <a href="/" data-target="mobile-demo" className="sidenav-trigger">
@@ -36,41 +36,48 @@ class NavBar extends Component {
               </a>
               <ul className="right hide-on-med-and-down">
                 <li>
-                  <Link to={"/property-for-rent/search"}>Rent</Link>
+                  <Link
+                    className={textColorClass}
+                    to={"/property-for-rent/search"}
+                  >
+                    Rent
+                  </Link>
                 </li>
                 <li>
-                  <Link to={"/property-for-sale/search"}>Buy</Link>
+                  <Link
+                    className={textColorClass}
+                    to={"/property-for-sale/search"}
+                  >
+                    Buy
+                  </Link>
                 </li>
                 <li>
-                  <Link to={"/property-for-sale/search"}>New Homes</Link>
-                </li>
-                <li>
-                  <Link to={"/property-for-sale/search"}>Commercial</Link>
-                </li>
-                <li>
-                  <Link to={"/property-for-sale/search"}>Find Agents</Link>
+                  <Link
+                    className={textColorClass}
+                    to={"/property-for-sale/search"}
+                  >
+                    New Homes
+                  </Link>
                 </li>
                 <li>
                   {this.props.currentUser ? (
-                    <Link to={"/account"}>
+                    <Link className={textColorClass} to={"/account"}>
                       <i className="material-icons right">face</i>
                       My MoveRight
                     </Link>
                   ) : (
-                    <Link to={"/signin"}>
+                    <Link className={textColorClass} to={"/signin"}>
                       <i className="material-icons right">person_pin</i>Sign In
                     </Link>
                   )}
                 </li>
-                {this.props.currentUser ? (
+                {this.props.currentUser && (
                   <li onClick={this.signOut}>
-                    <a href="#">
+                    <a className={textColorClass} href="#">
                       <i className="material-icons right">exit_to_app</i>
                       Sign Out
                     </a>
                   </li>
-                ) : (
-                  <> </>
                 )}
               </ul>
             </div>
@@ -119,6 +126,8 @@ class NavBar extends Component {
     );
   }
 }
+
+const textColorClass = "grey-text text-darken-3";
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser

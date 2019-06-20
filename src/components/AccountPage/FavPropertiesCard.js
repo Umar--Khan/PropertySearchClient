@@ -16,7 +16,11 @@ class FavPropertiesCard extends Component {
   }
 
   numberWithCommas = x => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    } else {
+      return "3,000";
+    }
   };
 
   getUser = () => {
@@ -123,7 +127,7 @@ class FavPropertiesCard extends Component {
                 : `£${this.numberWithCommas(prop.sale_price)}`}
             </h4>
             <a
-              className="btn-floating btn-large scale-transition blue darken-3"
+              className="btn-floating btn-large scale-transition light-blue"
               onClick={() => this.unFavoriteProperty(prop)}
               href="#!"
               style={{ marginLeft: "3rem" }}

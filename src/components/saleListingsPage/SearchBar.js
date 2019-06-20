@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Autocomplete from "react-google-autocomplete";
 import { adzunaAPIKey, adzunaAPPKey } from "../../apiKeys";
 import M from "materialize-css";
-// import "./Style.css";
+import { saveCurrentUser } from "../../actions/userActions";
 
 import {
   saveApiData,
@@ -56,17 +56,86 @@ class SearchBar extends Component {
     );
   };
 
-  handleInputChange = e => {
-    e.preventDefault();
-
-    const { value, name } = e.target;
-
-    this.setState({ [name]: value });
-  };
-
   handleGoogleSearchTerm = search => {
     this.setState({ where: search.formatted_address });
     this.props.saveSearchTerm(search.formatted_address);
+  };
+
+  makeID = () => {
+    return (
+      "_" +
+      Math.random()
+        .toString(36)
+        .substr(2, 9)
+    );
+  };
+
+  getUser = () => {
+    const apiUrl = "http://localhost:3001/api";
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      return fetch(apiUrl + "/user", {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          Authorization: `Token ${token}`
+        }
+      })
+        .then(resp => resp.json())
+        .then(data => {
+          if (data.user) {
+            this.props.saveCurrentUser(data.user);
+          }
+        })
+        .catch(err => console.log(err));
+    }
+  };
+
+  saveSearch = e => {
+    e.preventDefault();
+
+    if (!this.props.currentUser) {
+      M.toast({ html: "Log in to save search" });
+      return;
+    }
+    const apiUrl = "http://localhost:3001/api";
+    const token = localStorage.getItem("token");
+
+    const userId = this.props.currentUser._id;
+
+    const search = {
+      where: this.props.searchTerm,
+      distance: this.state.distance,
+      price_min: this.state.price_min,
+      price_max: this.state.price_max,
+      beds: this.state.beds,
+      property_type: this.state.property_type,
+      search_type: "for-sale",
+      id: this.makeID()
+    };
+
+    if (token) {
+      return fetch(apiUrl + `/${userId}/search`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          Authorization: `Token ${token}`
+        },
+        body: JSON.stringify({ search: search })
+      })
+        .then(resp => resp.json())
+        .then(
+          data => this.props.saveCurrentUser(data.user),
+          M.toast(
+            { html: "Added to Saved Searches" },
+            this.setState({ clicked: true })
+          )
+        )
+        .then(this.getUser())
+        .catch(err => console.log(err));
+    }
   };
 
   runQueries = () => {
@@ -117,7 +186,11 @@ class SearchBar extends Component {
   };
 
   numberWithCommas = x => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    } else {
+      return "3,000";
+    }
   };
 
   createPriceOptions = () => {
@@ -300,17 +373,31 @@ class SearchBar extends Component {
               value={this.props.maxResultsNumber}
             />
           </div>
+          <div className="col s4 l3 m3">
+            <p style={centerIcons} onClick={this.saveSearch}>
+              <i class="material-icons">save</i>
+              Save This Search
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 }
 
+const centerIcons = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  cursor: "pointer"
+};
+
 const mapStateToProps = state => ({
   searchTerm: state.search.searchTerm,
   pageNumber: state.search.pageNumber,
   maxResultsNumber: state.search.maxResultsNumber,
-  error: state.search.error
+  error: state.search.error,
+  currentUser: state.user.currentUser
 });
 
 export default connect(
@@ -320,6 +407,7 @@ export default connect(
     saveSearchTerm,
     errorPage,
     updatePageNumber,
-    updateMaxResultsNumber
+    updateMaxResultsNumber,
+    saveCurrentUser
   }
 )(SearchBar);

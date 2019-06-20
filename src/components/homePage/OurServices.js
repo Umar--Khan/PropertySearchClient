@@ -4,7 +4,7 @@ class OurServices extends Component {
   render() {
     return (
       <div className="container">
-        <h2 className="center">Our Services</h2>
+        <h2 className="center grey-text text-darken-3">Our Services</h2>
         <div className="row">
           <div className="col s12 m6 l4">
             <div className="center">
@@ -57,16 +57,17 @@ class OurServices extends Component {
 
 const iconStyle = {
   margin: "40px 0",
-  color: "#ee6e73",
   fontSize: "7rem",
-  display: "block"
+  display: "block",
+  color: "#4db6ac"
 };
 
 const promoTextStyle = {
   fontSize: "1.7rem",
   fontWeight: "500",
   marginTop: "5px",
-  marginBottom: "0"
+  marginBottom: "0",
+  color: "#424242 "
 };
 
 export default OurServices;

@@ -6,7 +6,11 @@ import { saveSingleProperty } from "../../actions/propertyActions";
 
 class LatestPropertiesCards extends Component {
   numberWithCommas = x => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    } else {
+      return "3,000";
+    }
   };
 
   render() {
@@ -35,11 +39,13 @@ class LatestPropertiesCards extends Component {
             >
               {property.title === "studio"
                 ? `Studio Flat in ${property.location.display_name}`
-                : `${property.beds} bed in ${property.location.display_name}`}
+                : `${property.beds ? property.beds : 1} bed in ${
+                    property.location.display_name
+                  }`}
             </span>
             <p className="center">
               <Link
-                to={`/property-for-sale/search/${property.id}`}
+                to={`/property-${property.category.tag}/search/${property.id}`}
                 onClick={() => {
                   window.scrollBy(0, -window.innerHeight);
                   this.props.saveSingleProperty(property);

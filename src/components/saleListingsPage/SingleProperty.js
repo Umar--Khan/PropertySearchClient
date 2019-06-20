@@ -11,12 +11,14 @@ import GoogleMap from "./GoogleMapPage";
 import { errorPage } from "../../actions/searchActions";
 import LatestPropertiesCards from "../homePage/LatestPropertiesCards";
 import { adzunaAPIKey, adzunaAPPKey } from "../../apiKeys";
+import { saveCurrentUser } from "../../actions/userActions";
 
 class SingleProperty extends Component {
   state = {
     urls: "",
     clicked: false,
-    properties: ""
+    properties: "",
+    similarProperties: ""
   };
 
   componentDidMount() {
@@ -40,6 +42,7 @@ class SingleProperty extends Component {
     if (prevProps.singleProperty !== this.props.singleProperty) {
       this.getImageUrls();
       this.getSimilarProperties();
+      this.clickedIfFavourite();
       window.scrollBy(0, -9000);
     }
   }
@@ -93,11 +96,10 @@ class SingleProperty extends Component {
   getSimilarProperties = () => {
     const { singleProperty } = this.props;
 
-    let postcode;
+    let postcode = encodeURIComponent(singleProperty.postcode);
+    let type = singleProperty.category.tag;
 
-    postcode = encodeURIComponent(singleProperty.postcode);
-
-    let endpoint = `https://cors-anywhere.herokuapp.com/https://api.adzuna.com:443/v1/api/property/gb/search/1?app_id=${adzunaAPPKey}&app_key=${adzunaAPIKey}&results_per_page=10&where=${postcode}&distance=1&category=for-sale`;
+    let endpoint = `https://cors-anywhere.herokuapp.com/https://api.adzuna.com:443/v1/api/property/gb/search/1?app_id=${adzunaAPPKey}&app_key=${adzunaAPIKey}&results_per_page=10&where=${postcode}&distance=1&category=${type}`;
 
     const headers = {
       "Content-Type": "application/json",
@@ -111,13 +113,18 @@ class SingleProperty extends Component {
       .then(data => {
         this.setState({ properties: data.results, loaded: true });
       })
+      .then(data => this.shortenList())
       .catch(error => {
         console.log(error);
       });
   };
 
   numberWithCommas = x => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    } else {
+      return "3,000";
+    }
   };
 
   sanitazeData = data => {
@@ -217,7 +224,6 @@ class SingleProperty extends Component {
       })
         .then(resp => resp.json())
         .then(
-          data => console.log(data),
           M.toast(
             { html: "Removed from Favourites" },
             this.setState({ clicked: false })
@@ -233,16 +239,18 @@ class SingleProperty extends Component {
 
     let newList = [];
 
-    for (let i = 0; i < 3; i++) {
-      newList.push(
-        list
-          .sort(function() {
-            return 0.5 - Math.random();
-          })
-          .pop()
-      );
+    if (this.state.properties) {
+      for (let i = 0; i < 3; i++) {
+        newList.push(
+          list
+            .sort(function() {
+              return 0.5 - Math.random();
+            })
+            .pop()
+        );
+      }
     }
-    return newList;
+    this.setState({ similarProperties: newList });
   };
 
   render() {
@@ -328,7 +336,7 @@ class SingleProperty extends Component {
                 <div className="col s12">
                   <ul className="tabs">
                     <li className="tab col s4">
-                      <a className="active" href="#property-details">
+                      <a className="active teal-text" href="#property-details">
                         <i className="material-icons" style={marginRight5px}>
                           home
                         </i>{" "}
@@ -336,7 +344,7 @@ class SingleProperty extends Component {
                       </a>
                     </li>
                     <li className="tab col s4">
-                      <a href="#floorplan">
+                      <a href="#floorplan" className="teal-text">
                         <i className="material-icons" style={marginRight5px}>
                           pages
                         </i>{" "}
@@ -344,7 +352,7 @@ class SingleProperty extends Component {
                       </a>
                     </li>
                     <li className="tab col s4">
-                      <a href="#map">
+                      <a href="#map" className="teal-text">
                         <i className="material-icons" style={marginRight5px}>
                           pin_drop
                         </i>{" "}
@@ -371,7 +379,10 @@ class SingleProperty extends Component {
                     </div>
                   </div>
                   <div className="col s12">
-                    <div className="divider" style={{ marginTop: "3rem" }} />
+                    <div
+                      className="divider teal"
+                      style={{ marginTop: "3rem" }}
+                    />
                     <div className="section">
                       <h4>Property description</h4>
                       <p>{singleProperty.description}</p>
@@ -379,7 +390,10 @@ class SingleProperty extends Component {
                   </div>
                   <div className="row">
                     <div className="col col l6 s12 m12">
-                      <div className="divider" style={{ marginTop: "3rem" }} />
+                      <div
+                        className="divider teal"
+                        style={{ marginTop: "3rem" }}
+                      />
                       <div className="section">
                         <div className="col s12" style={{ marginLeft: "6rem" }}>
                           <h5>You could get up to 200mb</h5>
@@ -405,7 +419,7 @@ class SingleProperty extends Component {
                     <div>
                       <div className="col l6 s12 m12">
                         <div
-                          className="divider"
+                          className="divider teal"
                           style={{ marginTop: "3rem" }}
                         />
                         <div className="section">
@@ -416,7 +430,7 @@ class SingleProperty extends Component {
                             {this.state.clicked ? (
                               <div>
                                 <p
-                                  className="btn-floating btn-medium blue darken-3"
+                                  className="btn-floating btn-medium light-blue"
                                   onClick={e =>
                                     this.unFavoriteProperty(singleProperty, e)
                                   }
@@ -429,7 +443,7 @@ class SingleProperty extends Component {
                             ) : (
                               <div>
                                 <p
-                                  className="btn-floating btn-medium red accent-4"
+                                  className="btn-floating btn-medium teal"
                                   onClick={e =>
                                     this.favoriteProperty(singleProperty, e)
                                   }
@@ -444,7 +458,7 @@ class SingleProperty extends Component {
                             )}
                             <div>
                               <p
-                                className="btn-floating btn-medium red accent-4"
+                                className="btn-floating btn-medium teal"
                                 style={{ cursor: "pointer" }}
                               >
                                 <i className="material-icons">share</i>
@@ -459,21 +473,28 @@ class SingleProperty extends Component {
                               Agent Details:
                             </h6>
                             <a
-                              href={`https://www.google.com/search?q=${
-                                singleProperty.agent.display_name
-                              }`}
+                              href={
+                                singleProperty.agent.display_name &&
+                                `https://www.google.com/search?q=${
+                                  singleProperty.agent.display_name
+                                }`
+                              }
                               style={semiBoldText}
                             >
-                              {singleProperty.agent.display_name}
+                              {singleProperty.agent.display_name &&
+                                singleProperty.agent.display_name}
                             </a>
                             <p>
                               Crown House Kentish Town Road, London, NW5 2TP
                             </p>
                             <p>Call: 020 8012 1907</p>
                             <a
-                              href={`https://www.google.com/search?q=${
-                                singleProperty.agent.display_name
-                              }`}
+                              href={
+                                singleProperty.agent.display_name &&
+                                `https://www.google.com/search?q=${
+                                  singleProperty.agent.display_name
+                                }`
+                              }
                             >
                               <button className="waves-effect waves-light btn">
                                 Request Details
@@ -504,28 +525,17 @@ class SingleProperty extends Component {
               </div>
             </div>
             <div className="col s12 l12 m12">
-              <div className="divider" style={{ marginTop: "1rem" }} />
+              <div className="divider teal" style={{ marginTop: "1rem" }} />
               <div className="section">
                 <h4>Similar properties</h4>
                 <div className="row">
-                  {this.state.properties ? (
-                    this.shortenList().map(property => (
+                  {this.state.similarProperties &&
+                    this.state.similarProperties.map(property => (
                       <LatestPropertiesCards
                         property={property}
                         key={property.id}
                       />
-                    ))
-                  ) : (
-                    <div
-                      className="center"
-                      style={{ marginTop: "10rem", marginBottom: "10rem" }}
-                    >
-                      <h3>Getting Latest Data</h3>
-                      <div className="progress">
-                        <div className="indeterminate" />
-                      </div>
-                    </div>
-                  )}
+                    ))}
                 </div>
               </div>
             </div>
@@ -551,5 +561,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { errorPage }
+  { errorPage, saveCurrentUser }
 )(SingleProperty);

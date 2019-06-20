@@ -111,9 +111,11 @@ class PropertyCards extends Component {
   };
 
   isFavourite() {
-    return this.props.currentUser.properties.some(
-      property => property.id === this.props.result.id
-    );
+    if (this.props.currentUser) {
+      return this.props.currentUser.properties.some(
+        property => property.id === this.props.result.id
+      );
+    }
   }
 
   clickedIfFavourite = () => {

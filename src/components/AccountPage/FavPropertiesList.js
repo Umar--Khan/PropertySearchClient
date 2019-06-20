@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 
 import { saveCurrentUser } from "../../actions/userActions";
 import FavPropertiesCard from "./FavPropertiesCard";
+import SavedSearchesList from "./SavedSearchesList";
 
 class FavPropertiesList extends Component {
   componentDidMount() {
@@ -35,15 +36,19 @@ class FavPropertiesList extends Component {
             <div className="col s12">
               <ul className="tabs">
                 <li className="tab col s4">
-                  <a className="active" href="#test1">
+                  <a className="active teal-text" href="#test1">
                     Saved Properties ({properties.length})
                   </a>
                 </li>
                 <li className="tab col s4">
-                  <a href="#test2">Saved Searches ({searches.length})</a>
+                  <a href="#test2" className="teal-text">
+                    Saved Searches ({searches.length})
+                  </a>
                 </li>
                 <li className="tab col s4">
-                  <a href="#test3">My Details</a>
+                  <a href="#test3" className="teal-text">
+                    My Details
+                  </a>
                 </li>
               </ul>
             </div>
@@ -62,17 +67,24 @@ class FavPropertiesList extends Component {
               </div>
             </div>
             <div id="test2" className="col s12">
-              {properties.length === 0 && (
-                <div className="col s12">
-                  <h3 className="center-align" style={{ marginTop: "20rem" }}>
-                    You have no saved searches
-                  </h3>
+              <div className="row">
+                <div class="collection">
+                  {searches.map(search => (
+                    <SavedSearchesList key={search.id} search={search} />
+                  ))}
                 </div>
-              )}
-            </div>
-            <div id="test3" className="col s12">
-              <div>
-                <h1>{this.props.currentUser.email}</h1>
+                {searches.length === 0 && (
+                  <div className="col s12">
+                    <h3 className="center-align" style={{ marginTop: "20rem" }}>
+                      You have no saved searches
+                    </h3>
+                  </div>
+                )}
+              </div>
+              <div id="test3" className="col s12">
+                <div>
+                  <h1>{this.props.currentUser.email}</h1>
+                </div>
               </div>
             </div>
           </div>
@@ -81,6 +93,7 @@ class FavPropertiesList extends Component {
     );
   }
 }
+
 const semiBoldText = { fontSize: "1rem", fontWeight: "500" };
 
 const mapStateToProps = state => ({
