@@ -32,7 +32,7 @@ class NavBar extends Component {
                 <i className="material-icons">home</i>MoveRight
               </Link>
               <a href="/" data-target="mobile-demo" className="sidenav-trigger">
-                <i className="material-icons">menu</i>
+                <i className="material-icons grey-text text-darken-3">menu</i>
               </a>
               <ul className="right hide-on-med-and-down">
                 <li>
@@ -85,41 +85,39 @@ class NavBar extends Component {
         </nav>
         <ul className="sidenav" id="mobile-demo">
           <li>
-            <Link to={"/property-for-rent/search"}>Rent</Link>
+            <Link className={textColorClass} to={"/property-for-rent/search"}>
+              Rent
+            </Link>
           </li>
           <li>
-            <Link to={"/property-for-sale/search"}>Buy</Link>
+            <Link className={textColorClass} to={"/property-for-sale/search"}>
+              Buy
+            </Link>
           </li>
           <li>
-            <Link to={"/property-for-sale/search"}>New Homes</Link>
-          </li>
-          <li>
-            <Link to={"/property-for-sale/search"}>Commercial</Link>
-          </li>
-          <li>
-            <Link to={"/property-for-sale/search"}>Find Agents</Link>
+            <Link className={textColorClass} to={"/property-for-sale/search"}>
+              New Homes
+            </Link>
           </li>
           <li>
             {this.props.currentUser ? (
-              <Link to={"/account"}>
+              <Link className={textColorClass} to={"/account"}>
                 <i className="material-icons right">face</i>
-                Account
+                My MoveRight
               </Link>
             ) : (
-              <Link to={"/signin"}>
+              <Link className={textColorClass} to={"/signin"}>
                 <i className="material-icons right">person_pin</i>Sign In
               </Link>
             )}
           </li>
-          {this.props.currentUser ? (
+          {this.props.currentUser && (
             <li onClick={this.signOut}>
-              <a href="#">
+              <a className={textColorClass} href="#">
                 <i className="material-icons right">exit_to_app</i>
                 Sign Out
               </a>
             </li>
-          ) : (
-            <> </>
           )}
         </ul>
       </div>

@@ -20,7 +20,10 @@ class SearchBar extends Component {
     price_min: 25000,
     price_max: "",
     beds: "",
-    property_type: ""
+    property_type: "",
+    sort_direction: "",
+    max_days_old: "",
+    sort_by: ""
   };
 
   componentDidMount() {
@@ -373,7 +376,40 @@ class SearchBar extends Component {
               value={this.props.maxResultsNumber}
             />
           </div>
-          <div className="col s4 l3 m3">
+          <div className="input-field col s4 l2 m2">
+            <select
+              onChange={this.handleSelectChange}
+              name="sort_by"
+              value={this.state.sort_by}
+            >
+              <option value="">Sort By</option>,
+              <option value="price">Price</option>,
+              <option value="date">Date</option>,
+            </select>
+          </div>
+          <div className="input-field col s4 l2 m2">
+            <select
+              onChange={this.handleSelectChange}
+              name="sort_direction"
+              value={this.state.sort_direction}
+            >
+              <option value="down">Ascending</option>,
+              <option value="up">Descending</option>,
+            </select>
+          </div>
+          <div className="input-field col s4 l2 m2">
+            <select
+              onChange={this.handleSelectChange}
+              name="max_days_old"
+              value={this.state.max_days_old}
+            >
+              <option value="">Days Old</option>,
+              <option value="7">7 Days Old</option>,
+              <option value="14">14 Days Old</option>,
+              <option value="30">1 Month Old</option>,
+            </select>
+          </div>
+          <div className="col s12 l3 m3">
             <p style={centerIcons} onClick={this.saveSearch}>
               <i className="material-icons">save</i>
               Save This Search

@@ -20,6 +20,12 @@ class PropertyCards extends Component {
     }
   };
 
+  getRandomInt = (min, max) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
   getUser = () => {
     const apiUrl = "http://localhost:3001/api";
     const token = localStorage.getItem("token");
@@ -160,14 +166,21 @@ class PropertyCards extends Component {
                 </p>
               </div>
               <div className="card-action">
-                <Link
-                  to={`/property-for-sale/search/${result.id}`}
-                  onClick={() => {
-                    this.props.saveSingleProperty(result);
-                  }}
-                >
-                  View More Info
-                </Link>
+                <div className="col s4">
+                  <Link
+                    to={`/property-for-sale/search/${result.id}`}
+                    onClick={() => {
+                      this.props.saveSingleProperty(result);
+                    }}
+                  >
+                    View More Info
+                  </Link>
+                </div>
+                <div className="col s8">
+                  <p style={{ float: "right" }}>
+                    Added by {result.agent.display_name}
+                  </p>
+                </div>
               </div>
             </div>
             <div className="valign-wrapper">
