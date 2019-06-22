@@ -320,7 +320,14 @@ class SearchBar extends Component {
   render() {
     return (
       <div className="container " style={{ marginTop: "50px" }}>
-        <div className="row">
+        <div
+          className="row"
+          style={{
+            border: "1px solid",
+            padding: "0.01rem 16px",
+            borderRadius: "16px"
+          }}
+        >
           <div
             className="input-field col l6 m6 s12"
             style={{ marginBottom: "0", marginTop: "28px" }}

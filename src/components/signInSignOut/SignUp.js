@@ -77,7 +77,7 @@ class SignUp extends Component {
     return (
       <div
         className="container"
-        style={{ marginTop: "5rem", marginBottom: "5rem" }}
+        style={{ marginTop: "5rem", minHeight: "51rem" }}
       >
         <div className="row">
           <div className="col l6 s12 m6">

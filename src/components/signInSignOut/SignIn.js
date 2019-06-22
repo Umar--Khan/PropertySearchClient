@@ -65,7 +65,7 @@ class SignIn extends Component {
 
   render() {
     return (
-      <div className="container valign-wrapper" style={{ minHeight: "40rem" }}>
+      <div className="container valign-wrapper" style={{ minHeight: "57rem" }}>
         <div className="row">
           <div className="col l6 m6 s12">
             <div className="center">

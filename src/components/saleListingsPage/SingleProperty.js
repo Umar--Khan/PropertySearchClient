@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import axios from "axios";
 import M from "materialize-css";
 import { Link } from "react-router-dom";
-import { backupUrls } from "./backupUrls";
+import { backupUrls, getRandomInt } from "./backupUrls";
 
 import ImageSlider from "./ImageSlider";
 import GoogleMap from "./GoogleMapPage";
@@ -43,7 +43,8 @@ class SingleProperty extends Component {
       M.Tabs.init(el);
     }
 
-    if (prevProps.singleProperty !== this.props.singleProperty) {
+    if (prevProps.singleProperty.id !== this.props.singleProperty.id) {
+      this.setState({ urls: "", clicked: false });
       this.getImageUrls();
       this.getSimilarProperties();
       this.clickedIfFavourite();
@@ -79,15 +80,23 @@ class SingleProperty extends Component {
               res.data.match(/<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/)[2]
             }`
           )
-          .then(pls => {
-            console.log(pls);
-            if (pls.config.url.includes("zoopla")) {
+          .then(resp => {
+            console.log(resp);
+            if (resp.config.url.includes("zoopla")) {
               this.setState({
-                urls: JSON.parse(this.sanitazeData(pls.data).join(""))
+                urls: JSON.parse(this.sanitazeData(resp.data).join(""))
+              });
+            } else if (resp.config.url.includes("onedome")) {
+              this.setState({
+                urls: this.sanitazeOneDome(resp.data)
+              });
+            } else if (resp.config.url.includes("smartnewhomes")) {
+              this.setState({
+                urls: this.sanitazeNewsmart(resp.data)
               });
             } else {
               this.setState({
-                urls: backupUrls()
+                urls: backupUrls(getRandomInt(1, 10))
               });
             }
           })
@@ -131,6 +140,16 @@ class SingleProperty extends Component {
     }
   };
 
+  getElements = (html, selector) => {
+    const parser = new DOMParser(); // the parser that will parse the html
+    const dom = parser.parseFromString(html, "text/html"); // parse the text in 'html' as html
+    const elems = dom.querySelectorAll(selector); // select the elements that match the CSS selector 'selector'
+    // return their outerHTML (elems is an array like object so map is not defined thus we have to call it in this way)
+    return Array.prototype.map.call(elems, function(e) {
+      return e.outerHTML;
+    });
+  };
+
   sanitazeData = data => {
     let result = `{"pictures" : ${data
       .match(/galleryItems =(.*)<\/script>/s)[1]
@@ -147,6 +166,48 @@ class SingleProperty extends Component {
         return item;
       }
     });
+  };
+
+  sanitazeOneDome = data => {
+    const images = this.getElements(data, ".flickity-gallery__img");
+
+    let imagesUrls = {
+      pictures: []
+    };
+
+    for (let i = 0; i < images.length; i++) {
+      let test = images[i].match(
+        /(\S+)=["']?((?:.(?!["']?\s+(?:\S+)=|[>"']))+.)["']?/g
+      );
+      test = test[1];
+      test = test.replace("src=", "");
+      test = test.replace(/"/g, "");
+      imagesUrls.pictures.push({ path: test, caption: i });
+    }
+    return imagesUrls;
+  };
+
+  sanitazeNewsmart = data => {
+    console.log("NewSmartHomes");
+    const images = this.getElements(data, ".lazy");
+
+    let imagesUrls = {
+      pictures: []
+    };
+
+    for (let i = 1; i < images.length; i++) {
+      let test = images[i].match(
+        /(\S+)=["']?((?:.(?!["']?\s+(?:\S+)=|[>"']))+.)["']?/g
+      );
+      test = test[0];
+      test = test.replace(/data-src=/g, "");
+      test = test.replace(/"/g, "");
+      test = test.replace("/80/", "/645/");
+      test = test.replace("/60/", "/430/");
+
+      imagesUrls.pictures.push({ path: test, caption: i });
+    }
+    return imagesUrls;
   };
 
   getUser = () => {
@@ -479,28 +540,32 @@ class SingleProperty extends Component {
                               Agent Details:
                             </h6>
                             <a
-                              href={
-                                singleProperty.agent.display_name &&
-                                `https://www.google.com/search?q=${
-                                  singleProperty.agent.display_name
-                                }`
-                              }
+                              // href={
+                              //   singleProperty.agent.display_name
+                              //     ? `https://www.google.com/search?q=${
+                              //         singleProperty.agent.display_name
+                              //       }`
+                              //     : `https://www.google.com/search?q=`
+                              // }
+                              href="https://www.google.com/search?q="
                               style={semiBoldText}
                             >
-                              {singleProperty.agent.display_name &&
-                                singleProperty.agent.display_name}
+                              {/* {singleProperty.agent.display_name &&
+                                singleProperty.agent.display_name} */}
+                              Regal Homes
                             </a>
                             <p>
                               Crown House Kentish Town Road, London, NW5 2TP
                             </p>
                             <p>Call: 020 8012 1907</p>
                             <a
-                              href={
-                                singleProperty.agent.display_name &&
-                                `https://www.google.com/search?q=${
-                                  singleProperty.agent.display_name
-                                }`
-                              }
+                              // href={
+                              //   singleProperty.agent.display_name &&
+                              //   `https://www.google.com/search?q=${
+                              //     singleProperty.agent.display_name
+                              //   }`
+                              // }
+                              href="https://www.google.com/search?q="
                             >
                               <button className="waves-effect waves-light btn">
                                 Request Details
@@ -533,7 +598,7 @@ class SingleProperty extends Component {
             <div className="col s12 l12 m12">
               <div className="divider teal" style={{ marginTop: "1rem" }} />
               <div className="section">
-                <h4>Similar properties</h4>
+                <h4>Similar properties in {singleProperty.location.area[3]}</h4>
                 <div className="row">
                   {this.state.similarProperties &&
                     this.state.similarProperties.map(property => (
