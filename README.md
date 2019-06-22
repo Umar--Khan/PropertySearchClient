@@ -1,3 +1,5 @@
+```npm start```
+
 Project Demo : https://youtu.be/ULLsDGJOje4
 
 3 week project. From planning to final which you can see in the demo. 
